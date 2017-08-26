@@ -1,0 +1,25 @@
+{
+  "name": "fb-larp-events",
+  "version": "0.0.1",
+  "description": "Getting larp related events from facebook",
+  "private": true,
+  "main": "index.js",
+  "scripts": {
+    "start": "node index.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/MrDulka/fb-larp-events.git"
+  },
+  "author": "TomasD",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/MrDulka/fb-larp-events/issues"
+  },
+  "homepage": "https://github.com/MrDulka/fb-larp-events#readme",
+  "dependencies": {
+    "ejs": "^2.5.7",
+    "express": "^4.15.4",
+    "node-fetch": "^1.7.2"
+  }
+}
