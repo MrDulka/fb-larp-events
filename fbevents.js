@@ -66,21 +66,61 @@ function filterEvents(data){
 
 //add data to the table
 function visualize(events){
-  var rows = d3.select("#results").selectAll("tr")
+  var rows = d3.select("#d3-root").selectAll("div")
     .data(events)
     .enter()
-    .append("tr");
+    .append("div")
+    .attr("class", "row");
 
-  rows.append("td")
-    .text(d => d.name || "");
-  rows.append("td")
-    .text(d => d.start_time || "");
-  rows.append("td")
-    .text(d => d.end_time || "");
-  rows.append("td")
-    .text(d => {
-      if(d.place && d.place.location && d.place.location.city){
-        return d.place.location.city
-      } else return ""
-    });
+  rows.append("div")
+    .attr("class", "cold-md-5 col-sm-5 col-xs-12")
+      .append("div")
+        .append("strong")
+        .text(d => d.name);
+
+  rows.append("div")
+    .attr("class", "cold-md-2 col-sm-2 col-xs-4")
+      .append("div")
+        .append("span")
+        .text(d => `${formatTime(d.start_time)} - ${formatTime(d.end_time)}`);
+
+  rows.append("div")
+    .attr("class", "cold-md-2 col-sm-2 col-xs-4")
+      .append("div")
+        .append("span")
+        .text(d => {
+          if(d.place && d.place.location && d.place.location.city){
+            return d.place.location.city
+          } else if (d.place && d.place.name){
+            return d.place.name
+          } else return "No location specified"
+        });
+
+  rows.append("div")
+    .attr("class", "cold-md-3 col-sm-3 col-xs-4")
+      .append("div")
+        .append("a")
+        .attr("href", d => `https://www.facebook.com/events/${d.id}`)
+        .attr("target", "_blank")
+        .text("Facebook event page");
+
+}
+
+function formatTime(time){
+  if (!time) {
+    return "";
+  }
+  var date = new Date(time);
+
+  var day = pad(date.getDate());
+  var month = pad(date.getMonth());
+  var year = pad(date.getFullYear());
+  var hours = pad(date.getHours());
+  var minutes = pad(date.getMinutes());
+
+  return `${day}.${month}.${year} ${hours}:${minutes}`;
+}
+
+function pad(num){
+  return num < 10 ? "0" + num : num.toString();
 }
