@@ -1,5 +1,7 @@
 var express = require('express');
 var fs = require('fs');
+var storeEvents = require('./store-events.js');
+var getEvents = require('./get-events.js');
 
 var app = express();
 
@@ -15,6 +17,24 @@ app.get('/', function(req, res){
 app.get('/fbevents.js', function (req, res){
   var script = fs.readFileSync("fbevents.js", "utf8");
   res.end(script);
+});
+
+
+//not really working well yet
+app.get('/events', function (req, res) {
+  getEvents().then(function(events){
+    res.write(JSON.stringify(events));
+
+    console.log(events.length);
+    res.end();
+  });
+
+});
+
+//not really working yet
+app.get('/save', function (req, res){
+  storeEvents();
+  res.end("Events stored");
 });
 
 
