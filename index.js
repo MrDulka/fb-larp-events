@@ -14,8 +14,8 @@ app.get('/', function(req, res){
   res.render("index");
 });
 
-app.get('/fbevents.js', function (req, res){
-  var script = fs.readFileSync("fbevents.js", "utf8");
+app.get('/clientscript.js', function (req, res){
+  var script = fs.readFileSync("clientscript.js", "utf8");
   res.end(script);
 });
 
