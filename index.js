@@ -1,7 +1,7 @@
 var express = require('express');
 var fs = require('fs');
-var storeEvents = require('./store-events.js');
-var getEvents = require('./get-events.js');
+var storeEvents = require('./scripts/mongodb/store-events.js');
+var getEvents = require('./scripts/mongodb/get-events.js');
 
 var app = express();
 
