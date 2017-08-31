@@ -20,14 +20,14 @@ class Events {
   }
 
   /**
-   * save one event in the database, if it is not already there
-   * if it is already there - found by name - updates other fields
+   * saves one event in the database, if it is not already there
+   * if it is already there - found by fbId - updates other fields
    * @param {Event} event - Event to store in the database
    * @return {Promise}
    */
   save(event){
     return this._database.collection('events').update(
-      {name: event.name},
+      {fbId: event.fbId},
       {name: event.name,
        date: event.date,
        location: event.location,
