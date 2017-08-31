@@ -17,10 +17,10 @@ app.set('view engine', 'ejs');
 MongoClient.connect(dbURL).then((database) => {
 
   const events = new Events(database);
+
   const controller = new EventsController(app, events);
 
 }).catch((error) => console.log(error));
-
 
 
 

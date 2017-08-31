@@ -1,7 +1,6 @@
 /**
  * Class representing a controller for the events
  */
-
 class EventsController{
   /**
    * Create a controller

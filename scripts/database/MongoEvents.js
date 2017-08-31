@@ -18,13 +18,22 @@ class Events {
   load(){
     return this._database.collection('events').find().toArray();
   }
+
   /**
-   * store one event to the database
+   * save one event in the database, if it is not already there
+   * if it is already there - found by name - updates other fields
    * @param {Event} event - Event to store in the database
-   * @return {Promise} 
+   * @return {Promise}
    */
   save(event){
-    return this._database.collection('events').insertOne(event);
+    return this._database.collection('events').update(
+      {name: event.name},
+      {name: event.name,
+       date: event.date,
+       location: event.location,
+       fbId: event.fbId},
+      {upsert: true}
+    );
   }
 }
 
