@@ -45,6 +45,15 @@ class Event{
   set fbId(val){
     this._fbId = val;
   }
+
+  json(){
+    return {
+      name: this.name,
+      date: this.date,
+      location: this.location,
+      fbId: this.fbId
+    }
+  }
 }
 
 module.exports = Event;

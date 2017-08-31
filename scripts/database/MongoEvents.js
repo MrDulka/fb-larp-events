@@ -28,10 +28,7 @@ class Events {
   save(event){
     return this._database.collection('events').update(
       {fbId: event.fbId},
-      {name: event.name,
-       date: event.date,
-       location: event.location,
-       fbId: event.fbId},
+      event.json(),
       {upsert: true}
     );
   }
