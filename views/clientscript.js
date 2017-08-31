@@ -1,7 +1,9 @@
 var accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
 var graphUrl = "https://graph.facebook.com/";
-var maxIterations = 2; //limit how many times we call getPageIds (this number + 1)
+var maxIterations = 0; //limit how many times we call getPageIds (this number + 1)
 var events = [];
+
+console.log('hello clientscript');
 
 getFirstPageIds();
 

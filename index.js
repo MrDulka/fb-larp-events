@@ -1,40 +1,35 @@
-var express = require('express');
-var fs = require('fs');
-var storeEvents = require('./scripts/mongodb/store-events.js');
-var getEvents = require('./scripts/mongodb/get-events.js');
+const express = require('express');
+const fs = require('fs');
+const MongoClient = require('mongodb').MongoClient;
+const Event = require('./scripts/database/Event.js');
+const Events = require('./scripts/database/MongoEvents.js');
+const EventsController = require('./scripts/controller/EventsController.js')
 
-var app = express();
+const app = express();
+const dbURL = 'mongodb://localhost:27017/test';
 
 app.set('port', (process.env.PORT || 5000));
 
 app.set('views', __dirname + "/views");
 app.set('view engine', 'ejs');
 
+
+MongoClient.connect(dbURL).then((database) => {
+
+  const events = new Events(database);
+  const controller = new EventsController(app, events);
+
+}).catch((error) => console.log(error));
+
+
+
 app.get('/', function(req, res){
   res.render("index");
 });
 
 app.get('/clientscript.js', function (req, res){
-  var script = fs.readFileSync("clientscript.js", "utf8");
+  const script = fs.readFileSync("./views/clientscript.js", "utf8");
   res.end(script);
-});
-
-
-//not really working well yet
-app.get('/events', function (req, res) {
-  getEvents().then(function(events){
-    res.write(JSON.stringify(events));
-
-    console.log(events.length);
-    res.end();
-  });
-
-});
-
-//not really working yet
-app.get('/save', function (req, res){
-  storeEvents();
-  res.end("Events stored");
 });
 
 
