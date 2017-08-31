@@ -23,6 +23,7 @@ MongoClient.connect(dbURL).then((database) => {
 
 
 
+
 app.get('/', function(req, res){
   res.render("index");
 });

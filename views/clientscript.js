@@ -3,8 +3,6 @@ var graphUrl = "https://graph.facebook.com/";
 var maxIterations = 0; //limit how many times we call getPageIds (this number + 1)
 var events = [];
 
-console.log('hello clientscript');
-
 getFirstPageIds();
 
 function getFirstPageIds(){
@@ -63,6 +61,7 @@ function filterEvents(data){
     return now < startTime;
   });
 
+  console.log(events);
   visualize(events);
 }
 
