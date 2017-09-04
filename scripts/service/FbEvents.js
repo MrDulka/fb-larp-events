@@ -1,4 +1,5 @@
 var fetch = require('node-fetch');
+var Event = require('../database/Event.js')
 
 /**
  * Class for getting events from Facebook
@@ -12,7 +13,7 @@ class FbEvents {
 
     load() {
       return new Promise(function(resolve, reject) {
-        const accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
+        const accessToken = process.env.ACCESS_TOKEN;
         const graphUrl = "https://graph.facebook.com/";
         const maxIterations = 5; //limit how many times we call getPageIds
         var iterationsLeft = maxIterations;
@@ -71,8 +72,11 @@ class FbEvents {
             }
           }
 
-          //filter only upcoming events
+          //filter only upcoming events with specified location coordinates
           events = events.filter( event => {
+            if (!event.place || !event.place.location || !event.place.location.latitude || !event.place.location.longitude){
+              return false;
+            }
             var now = new Date();
             var startTime = new Date(event.start_time);
             return now < startTime;
@@ -86,6 +90,22 @@ class FbEvents {
         function considerReturn(events){
           eventIterationsDone++;
           if (eventIterationsDone >= maxIterations){
+            //in the end, make the events instances of the Event class
+            events = events.map( event => {
+              var name = event.name;
+              var date = {
+                start_date: event.start_time,
+                end_date: event.end_time
+              }
+              var location = {
+                latitude: event.place.location.latitude,
+                longitude: event.place.location.longitude
+              }
+              var fbId = event.id;
+
+              return new Event(name, date, location, fbId);
+            });
+
             resolve(events);
           }
         }

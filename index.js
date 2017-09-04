@@ -24,6 +24,7 @@ MongoClient.connect(dbURL).then((database) => {
 
 }).catch((error) => console.log(error));
 
+
 app.get('/test', function(req, res){
   const fbEvents = new FbEvents();
   fbEvents.load().then(events => {
@@ -32,7 +33,6 @@ app.get('/test', function(req, res){
   });
 
 });
-
 
 app.get('/', function(req, res){
   res.render("index");

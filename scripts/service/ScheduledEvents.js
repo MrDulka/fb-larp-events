@@ -17,6 +17,10 @@ class ScheduledEvents {
         this._timer = setInterval(this.load.bind(this), ScheduledEvents.HOUR);
         this.load();
     }
+
+    stop() {
+      clearInterval(this._timer);
+    }
 }
 
 module.exports = ScheduledEvents;
