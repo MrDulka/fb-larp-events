@@ -4,8 +4,8 @@ class SqlEvents {
         this._pgPool = pgPool;
     }
 
-    store(neco){
-        let selectSql = `SELECT * FROM public.csld_events WHERE neco = '${neco}'`;
+    store(event){
+        let selectSql = `SELECT * FROM public.csld_events WHERE fbId = '${event.fbId}'`;
         let insertSql = `INSERT INTO public.csld_events () VALUES ()`;
         this._pgPool.query(selectSql).then(result => {
             if(result.rows.length > 0) {
