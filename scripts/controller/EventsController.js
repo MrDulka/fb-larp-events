@@ -5,13 +5,11 @@ class EventsController{
   /**
    * Create a controller
    * Route HTTP GET requests to "/event" with the load method
-   * Route HTTP POST requests to "/event" with the store method
    * @param {Application} app - Express Application
    * @param {Events} events - instance of Events class, used for working with database
    */
   constructor(app, events) {
     app.get('/event', this.load.bind(this));
-    app.post('/event', this.store.bind(this));
     this._events = events;
   }
 

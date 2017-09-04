@@ -3,7 +3,9 @@ const fs = require('fs');
 const MongoClient = require('mongodb').MongoClient;
 const Event = require('./scripts/database/Event.js');
 const Events = require('./scripts/database/MongoEvents.js');
-const EventsController = require('./scripts/controller/EventsController.js')
+const EventsController = require('./scripts/controller/EventsController.js');
+
+const FbEvents = require('./scripts/service/FbEvents.js');
 
 const app = express();
 const dbURL = 'mongodb://localhost:27017/test';
@@ -22,6 +24,14 @@ MongoClient.connect(dbURL).then((database) => {
 
 }).catch((error) => console.log(error));
 
+app.get('/test', function(req, res){
+  const fbEvents = new FbEvents();
+  fbEvents.load().then(events => {
+      console.log(events.length);
+      res.end(JSON.stringify(events));
+  });
+
+});
 
 
 app.get('/', function(req, res){
