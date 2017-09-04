@@ -15,7 +15,7 @@ class FbEvents {
       return new Promise(function(resolve, reject) {
         const accessToken = process.env.ACCESS_TOKEN;
         const graphUrl = "https://graph.facebook.com/";
-        const maxIterations = 5; //limit how many times we call getPageIds
+        const maxIterations = 8; //limit how many times we call getPageIds
         var iterationsLeft = maxIterations;
         var eventIterationsDone = 0;
         var events = [];

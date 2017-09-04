@@ -2,10 +2,10 @@ const express = require('express');
 const fs = require('fs');
 const MongoClient = require('mongodb').MongoClient;
 const Event = require('./scripts/database/Event.js');
-const Events = require('./scripts/database/MongoEvents.js');
-const EventsController = require('./scripts/controller/EventsController.js');
-
+const MongoEvents = require('./scripts/database/MongoEvents.js');
 const FbEvents = require('./scripts/service/FbEvents.js');
+const ScheduledEvents = require('./scripts/service/ScheduledEvents.js');
+const EventsController = require('./scripts/controller/EventsController.js');
 
 const app = express();
 const dbURL = 'mongodb://localhost:27017/test';
@@ -17,22 +17,17 @@ app.set('view engine', 'ejs');
 
 
 MongoClient.connect(dbURL).then((database) => {
+  const mongoEvents = new MongoEvents(database);
+  const fbEvents = new FbEvents();
 
-  const events = new Events(database);
+  const scheduledEvents = new ScheduledEvents(fbEvents, mongoEvents);
 
-  const controller = new EventsController(app, events);
+  scheduledEvents.schedule();
+  scheduledEvents.stop();
+
+  const controller = new EventsController(app, mongoEvents);
 
 }).catch((error) => console.log(error));
-
-
-app.get('/test', function(req, res){
-  const fbEvents = new FbEvents();
-  fbEvents.load().then(events => {
-      console.log(events.length);
-      res.end(JSON.stringify(events));
-  });
-
-});
 
 app.get('/', function(req, res){
   res.render("index");
