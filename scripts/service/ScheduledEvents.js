@@ -30,6 +30,9 @@ class ScheduledEvents {
             events.forEach(event => {
               this._serializeEvents.save(event);
             });
+        }).catch(err => {
+          console.log(err);
+          // TODO: what else can we do on error?
         });
     }
 

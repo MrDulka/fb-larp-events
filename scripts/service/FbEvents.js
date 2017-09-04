@@ -13,7 +13,7 @@ class FbEvents {
 
     load() {
       return new Promise(function(resolve, reject) {
-        const accessToken = process.env.ACCESS_TOKEN;
+        const accessToken = process.env.ACCESS_TOKEN || "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
         const graphUrl = "https://graph.facebook.com/";
         const maxIterations = 8; //limit how many times we call getPageIds
         var iterationsLeft = maxIterations;

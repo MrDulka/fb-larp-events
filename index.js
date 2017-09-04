@@ -12,10 +12,6 @@ const dbURL = 'mongodb://localhost:27017/test';
 
 app.set('port', (process.env.PORT || 5000));
 
-app.set('views', __dirname + "/views");
-app.set('view engine', 'ejs');
-
-
 MongoClient.connect(dbURL).then((database) => {
   const mongoEvents = new MongoEvents(database);
   const fbEvents = new FbEvents();
@@ -29,6 +25,13 @@ MongoClient.connect(dbURL).then((database) => {
 
 }).catch((error) => console.log(error));
 
+
+/**
+ * client side, to be removed soon
+ */
+app.set('views', __dirname + "/views");
+app.set('view engine', 'ejs');
+
 app.get('/', function(req, res){
   res.render("index");
 });
@@ -39,6 +42,4 @@ app.get('/clientscript.js', function (req, res){
 });
 
 
-app.listen(app.get('port'), function() {
-  console.log('Node app is running on port', app.get('port'));
-});
+app.listen(app.get('port'));
