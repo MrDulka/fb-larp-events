@@ -1,6 +1,15 @@
 var fetch = require('node-fetch');
 
+/**
+ * Class for getting events from Facebook
+ */
 class FbEvents {
+    /**
+     * loads events
+     * @return {Promise} promise that resolves with an array of events that we
+     * received from Facebook
+     */
+
     load() {
       return new Promise(function(resolve, reject) {
         const accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
@@ -19,7 +28,7 @@ class FbEvents {
           .then(data => getPageIds(data))
           .catch(err => {
             console.log(err);
-            //TODO: add error handling
+            reject(err);
           });
         }
 
@@ -36,12 +45,12 @@ class FbEvents {
             .then(d => getPageIds(d))
             .catch(err => {
               console.log(err);
-              //TODO: add error handling
+              reject(err);
             });
           }
         }
 
-        //make a request to graph api for events of specified pages, identified by ids
+        //make a request to graph api for events of specified pages, identified by their event ids
         function getEvents(pageIds){
           var idString = pageIds.join(",");
           var searchUrl = graphUrl + "events?ids=" + idString + "&access_token=" + accessToken;
@@ -50,7 +59,7 @@ class FbEvents {
           .then(data => filterEvents(data))
           .catch(err => {
             console.log(err);
-            //TODO: add error handling
+            reject(err);
           });
         }
 
