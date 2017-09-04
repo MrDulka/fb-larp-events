@@ -28,17 +28,6 @@ class EventsController{
     });
   }
 
-  /**
-   * Should store the event received in the request
-   * TODO: After receiving the request, should it filter/trim/validate the data
-   * provided in the request?
-   * Should it instantiate an object of the Event class and pass that to
-   * events?
-   */
-  store(request, response){
-
-  }
-
 }
 
 module.exports = EventsController;
