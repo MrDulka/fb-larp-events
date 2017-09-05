@@ -19,7 +19,6 @@ MongoClient.connect(dbURL).then((database) => {
   const scheduledEvents = new ScheduledEvents(fbEvents, mongoEvents);
 
   scheduledEvents.schedule();
-  scheduledEvents.stop();
 
   const controller = new EventsController(app, mongoEvents);
 
