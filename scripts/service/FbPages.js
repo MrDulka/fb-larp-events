@@ -18,12 +18,12 @@ class FbPages {
   loadIds(){
     return new Promise((resolve, reject) => {
       var ids = [];
-      var result = this.getPageIds(this._firstUrl);
+      var result = this.getUrl(this._firstUrl);
 
       for(let i=0; i<this._maxIterations-1; i++){
         result = result.then((data) => {
           data.data.forEach(page => ids.push(page.id));
-          return this.getPageIds(data.paging.next);
+          return this.getUrl(data.paging.next);
         });
       }
 
@@ -43,7 +43,7 @@ class FbPages {
    * @param {string} url
    * @return {Promise} promise that resolves to an object with returned data
    */
-  getPageIds(url){
+  getUrl(url){
     return new Promise((resolve, reject) => {
       fetch(url)
       .then(response => response.json())
@@ -54,5 +54,6 @@ class FbPages {
       });
     });
   }
-
 }
+
+module.exports = FbPages;
