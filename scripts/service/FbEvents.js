@@ -21,7 +21,7 @@ class FbEvents {
      * @return {Promise} promise that resolves with an array of events that we
      * received from Facebook, formatted as instances of Event class
      */
-    loadEvents(){
+    load(){
       return new Promise((resolve, reject) => {
         this._fbPages.loadIds()
         .then(ids => {
@@ -43,14 +43,13 @@ class FbEvents {
     /**
      * Splits ids into chunks that facebook api can hadle (size 25)
      * and requests data for events of the facebook pages with specified ids
-     * @param {string[]} ids array of strings, ids of facebook pages related to larp
+     * @param {string[]} ids - array of strings, ids of facebook pages related to larp
      * @return {Promise} promise that resolve with an array of data responses from Facebook
      */
     getEvents(ids){
       return new Promise((resolve, reject) => {
         var idArray = ids;
         var iterations = Math.ceil(idArray.length / 25);
-        var result = Promise.resolve();
         var promises = [];
 
         for (let i=0; i<iterations; i++){
@@ -111,10 +110,10 @@ class FbEvents {
     /**
      * Filteres events, only those happening in the future and with specified coordinates remain
      * @param {Object[]} events - array of objects, organized
-     * @param {Object[]} filteredEvents - array of objects, filtered
+     * @param {Object[]} - array of objects, filtered
      */
     filter(events){
-      var filteredEvents = events.filter( event => {
+      return events.filter( event => {
         if (!event.place || !event.place.location || !event.place.location.latitude || !event.place.location.longitude){
           return false;
         }
@@ -122,16 +121,15 @@ class FbEvents {
         var startTime = new Date(event.start_time);
         return now < startTime;
       });
-      return filteredEvents;
     }
 
     /**
      * Makes the received events into instances of the Event class
      * @param {Object[]} events - array of objects, filtered
-     * @param {Event[]} classifiedEvents - array of events
+     * @param {Event[]}  - array of events
      */
     classify(events){
-      var classifiedEvents = events.map( event => {
+      return events.map( event => {
         var name = event.name;
         var description = event.description;
         var date = {
@@ -146,8 +144,6 @@ class FbEvents {
 
         return new Event(name, description, date, location, fbId);
       });
-
-      return classifiedEvents;
     }
 
 }
