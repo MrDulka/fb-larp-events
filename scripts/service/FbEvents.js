@@ -5,7 +5,7 @@ Alebo vytvoriť ďalšiu triedu od ktorej budú preberať obe?
 
 var fetch = require('node-fetch');
 var FbPages = require('./FbPages.js');
-var FormatEvents = require('./FormatEvents.js');
+var EventsFormatter = require('./EventsFormatter.js');
 
 /**
  * Class for getting events from Facebook
@@ -14,7 +14,7 @@ class FbEvents {
     constructor(){
       this._accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
       this._fbPages = new FbPages();
-      this._formatEvents = new FormatEvents();
+      this._eventsFormatter = new EventsFormatter();
     }
 
     /**
@@ -29,7 +29,7 @@ class FbEvents {
           return this.getEvents(ids);
         })
         .then(data => {
-          return this._formatEvents.format(data);
+          return this._eventsFormatter.format(data);
         })
         .then(events => {
           resolve(events);
