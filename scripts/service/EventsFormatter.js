@@ -1,5 +1,5 @@
 var Event = require('../database/Event.js');
-
+var Locator = require('./Locator.js');
 /**
  * class for formatting events
  */
@@ -12,6 +12,7 @@ class FormatEvents{
   format(data){
     var events = this.organize(data);
     events = this.filter(events);
+    events = this.localize(events);
     events = this.classify(events);
     return events;
   }
@@ -36,7 +37,7 @@ class FormatEvents{
   /**
    * Filteres events, only those happening in the future and with specified coordinates remain
    * @param {Object[]} events - array of objects, organized
-   * @param {Object[]} - array of objects, filtered
+   * @return {Object[]} - array of objects, filtered
    */
   filter(events){
     return events.filter( event => {
@@ -50,9 +51,28 @@ class FormatEvents{
   }
 
   /**
-   * Makes the received events into instances of the Event class
+   * Finds out the region corresponding to the coordinates of the events
+   * and filteres out those that do not fall into one of the preferred regions
    * @param {Object[]} events - array of objects, filtered
-   * @param {Event[]}  - array of events
+   * @return {Object[]} filtered - array of objects with new added property event.place.location.region
+   */
+  localize(events){
+    const locator = new Locator();
+    var localizedEvents = events.map( event => {
+      let region = locator.find(event.place.location.latitude, event.place.location.longitude);
+      event.place.location.region = region;
+      return event;
+    });
+    var filtered = localizedEvents.filter( event => {
+      return event.place.location.region;
+    });
+    return filtered;
+  }
+
+  /**
+   * Makes the received events into instances of the Event class
+   * @param {Object[]} events - array of objects localized
+   * @return {Event[]}  - array of events
    */
   classify(events){
     return events.map( event => {
@@ -64,7 +84,8 @@ class FormatEvents{
       }
       var location = {
         latitude: event.place.location.latitude,
-        longitude: event.place.location.longitude
+        longitude: event.place.location.longitude,
+        name: event.place.location.city || event.place.location.region
       }
       var fbId = event.id;
 

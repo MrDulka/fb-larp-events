@@ -32,6 +32,10 @@ class Events {
       {upsert: true}
     );
   }
+
+  clear(){
+    this._database.collection('events').remove();
+  }
 }
 
 module.exports = Events;
