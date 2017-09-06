@@ -7,7 +7,7 @@ var fetch = require('node-fetch');
 class FbPages {
   constructor(){
     this._accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
-    this._maxIterations = 10;
+    this._maxIterations = 20;
     this._firstUrl = 'https://graph.facebook.com/search?q=larp&type=page&access_token=' + this._accessToken;
   }
 
@@ -23,12 +23,15 @@ class FbPages {
       for(let i=0; i<this._maxIterations-1; i++){
         result = result.then((data) => {
           data.data.forEach(page => ids.push(page.id));
-          return this.getUrl(data.paging.next);
+          if (!data.paging.next) return;
+          else return this.getUrl(data.paging.next);
         });
       }
 
       result.then((data) => {
-        data.data.forEach(page => ids.push(page.id));
+        if(data) {
+          data.data.forEach(page => ids.push(page.id));
+        }
         resolve(ids);
       })
       .catch(err => {
