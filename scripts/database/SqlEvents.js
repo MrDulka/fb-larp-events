@@ -75,8 +75,8 @@ class SqlEvents {
         var name = event.name;
         var description = event.description;
         var date = {
-          start_date: event.from,
-          end_date: event.to
+          start_date: event.from.toISOString(),
+          end_date: event.to.toISOString()
         };
         var location = {
           latitude: event.latitude,

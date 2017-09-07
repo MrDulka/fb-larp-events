@@ -9,4 +9,6 @@ const dataStores = new DataStores(mongoURL, sqlURL);
 dataStores.setup().then(databases => {
   const webapp = new WebApplication(databases);
   webapp.setup();
+}).catch(err => {
+  console.log(err);
 });
