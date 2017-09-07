@@ -1,11 +1,17 @@
 const MongoClient = require('mongodb').MongoClient;
+const { Pool } = require('pg');
 
 class DataStores{
-  constructor(mongoURI){
-    this._mongoURI = mongoURI;
+  constructor(mongoURL, sqlURL){
+    this._mongoURL = mongoURL;
+    this._sqlURL = sqlURL;
   }
   setup(){
-    return MongoClient.connect(this._mongoURI);
+    const mongo = MongoClient.connect(this._mongoURL);
+    const pool = new Pool({connectionString: this._sqlURL});
+
+    return Promise.all([mongo, pool]);
+
   }
 }
 

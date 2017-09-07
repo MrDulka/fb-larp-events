@@ -1,10 +1,10 @@
 /**
-  * This class represents Events in some store for example in the Mongo DB store.
+  * This class represents Events in the Mongo DB store.
   */
 
-class Events {
+class MongoEvents {
   /**
-   * Create Events
+   * Create MongoEvents
    * @param {Object} database - represents the database to which it is connected
    */
   constructor(database){
@@ -38,4 +38,4 @@ class Events {
   }
 }
 
-module.exports = Events;
+module.exports = MongoEvents;

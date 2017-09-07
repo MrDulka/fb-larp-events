@@ -1,10 +1,12 @@
 const DataStores = require('./scripts/database/DataStores.js');
 const WebApplication = require('./scripts/webapp/WebApplication');
 
-const mongoURI = 'mongodb://localhost:27017/test';
+const mongoURL = 'mongodb://localhost:27017/test';
+const sqlURL = 'postgresql://postgres:cyxwerno45981@localhost:5432/postgres';
 
-const dataStores = new DataStores(mongoURI);
+const dataStores = new DataStores(mongoURL, sqlURL);
 
-const webapp = new WebApplication(dataStores);
-
-webapp.setup();
+dataStores.setup().then(databases => {
+  const webapp = new WebApplication(databases);
+  webapp.setup();
+});

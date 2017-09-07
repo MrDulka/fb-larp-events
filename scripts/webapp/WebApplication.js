@@ -2,27 +2,29 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 const MongoEvents = require('../database/MongoEvents.js');
+const SqlEvents = require('../database/SqlEvents.js');
 const FbEvents = require('../service/FbEvents.js');
 const ScheduledEvents = require('../service/ScheduledEvents.js');
 const EventsController = require('../controller/EventsController.js');
 
 class WebApplication{
-  constructor(mongoDB){
-    this._mongoDB = mongoDB;
+  constructor(databases){
+    this._mongoDB = databases[0];
+    this._pgPool = databases[1];
   }
   setup(){
     app.set('port', (process.env.PORT || 5000));
     app.listen(app.get('port'));
 
-    this._mongoDB.setup().then((database) =>{
-      const mongoEvents = new MongoEvents(database);
-      const fbEvents = new FbEvents();
-      const scheduledEvents = new ScheduledEvents(fbEvents, mongoEvents);
+    const mongoEvents = new MongoEvents(this._mongoDB);
+    const sqlEvents = new SqlEvents(this._pgPool);
 
-      scheduledEvents.schedule();
+    const fbEvents = new FbEvents();
+    const scheduledEvents = new ScheduledEvents(fbEvents, sqlEvents);
 
-      const controller = new EventsController(app, mongoEvents);
-    }).catch((error) => console.log(error));
+    scheduledEvents.schedule();
+
+    const controller = new EventsController(app, sqlEvents);
 
     this.clientside();
   }
