@@ -59,23 +59,32 @@ class SqlEvents {
       return new Promise((resolve, reject) => {
         let selectSql = `SELECT * FROM event`;
         this._pgPool.query(selectSql).then(result => {
-          var events = result.rows.map(event => {
-            var name = event.name;
-            var description = event.description;
-            var date = {
-              start_date: event.from,
-              end_date: event.to
-            };
-            var location = {
-              latitude: event.latitude,
-              longitude: event.longitude,
-              name: event.loc
-            };
-            var fbId = event.web.match(/\d+$/)[0];
-            return new Event(name, description, date, location, fbId);
-          });
+          var events = this.convert(result);
           resolve(events);
         });
+      });
+    }
+
+    /**
+     * Converts events to instances of Event class
+     * @param {Object[]} events - array of events as received from database
+     * @return {Event[]} - array of Events
+     */
+    convert(events){
+      return events.rows.map(event => {
+        var name = event.name;
+        var description = event.description;
+        var date = {
+          start_date: event.from,
+          end_date: event.to
+        };
+        var location = {
+          latitude: event.latitude,
+          longitude: event.longitude,
+          name: event.loc
+        };
+        var fbId = event.web.match(/\d+$/)[0];
+        return new Event(name, description, date, location, fbId);
       });
     }
 }
