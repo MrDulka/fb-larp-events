@@ -81,12 +81,12 @@ class FormatEvents{
       var date = {
         start_date: event.start_time,
         end_date: event.end_time
-      }
+      };
       var location = {
         latitude: event.place.location.latitude,
         longitude: event.place.location.longitude,
         name: event.place.location.city || event.place.location.region
-      }
+      };
       var fbId = event.id;
 
       return new Event(name, description, date, location, fbId);
