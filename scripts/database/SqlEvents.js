@@ -22,8 +22,8 @@ class SqlEvents {
       let description = event.description;
       let loc = event.location.name;
       let source = 'Facebook';
-      let from = event.date.start_date;
-      let to = event.date.end_date;
+      let from = new Date(event.date.start_date);
+      let to = new Date(event.date.end_date);
       let latitude = event.location.latitude;
       let longitude = event.location.longitude;
       let web = 'https://www.facebook.com/' + event.fbId;

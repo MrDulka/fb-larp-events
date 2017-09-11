@@ -1,28 +1,27 @@
 var fetch = require('node-fetch');
 
 /**
- * Class for getting IDs of larp related pages from Facebook
+ * Class for searching on Facebook
  */
 
-class FbPages {
+class FbSearch {
   constructor(){
-    this._accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
     this._maxIterations = 10;
-    this._firstUrl = 'https://graph.facebook.com/search?q=larp&type=page&access_token=' + this._accessToken;
   }
-
   /**
-   * Get the IDs
-   * @return {Promise} promise that resolves to an Array of strings - Facebook pages IDs
+   * Get the IDs, iterate over the paginated results returned from FB,
+   * using their provided "next" link
+   * @param {string} firstUrl - url with which we start the search
+   * @return {Promise} promise that resolves to an Array of IDs as strings
    */
-  loadIds(){
+  loadIds(firstUrl){
     return new Promise((resolve, reject) => {
       var ids = [];
-      var result = this.getUrl(this._firstUrl);
+      var result = this.getUrl(firstUrl);
 
       for(let i=0; i<this._maxIterations-1; i++){
         result = result.then((data) => {
-          data.data.forEach(page => ids.push(page.id));
+          data.data.forEach(elem => ids.push(elem.id));
           if (!data.paging.next) return;
           else return this.getUrl(data.paging.next);
         });
@@ -30,7 +29,7 @@ class FbPages {
 
       result.then((data) => {
         if(data) {
-          data.data.forEach(page => ids.push(page.id));
+          data.data.forEach(elem => ids.push(elem.id));
         }
         resolve(ids);
       })
@@ -59,4 +58,4 @@ class FbPages {
   }
 }
 
-module.exports = FbPages;
+module.exports = FbSearch;

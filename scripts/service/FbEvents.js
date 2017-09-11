@@ -1,10 +1,5 @@
-/** Otázka na Baldu - metóda getUrl je rovnaká ako u triedy FbPages, môžem ju
-použiť miesto definovania duplicitnej u FbEvents?
-Alebo vytvoriť ďalšiu triedu od ktorej budú preberať obe?
-*/
-
 var fetch = require('node-fetch');
-var FbPages = require('./FbPages.js');
+var FbSearch = require('./FbSearch.js');
 var EventsFormatter = require('./EventsFormatter.js');
 
 /**
@@ -13,7 +8,9 @@ var EventsFormatter = require('./EventsFormatter.js');
 class FbEvents {
     constructor(){
       this._accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
-      this._fbPages = new FbPages();
+      this._pagesSearch = "https://graph.facebook.com/search?q=larp&type=page&access_token=" + this._accessToken;
+      this._groupsSearch = "https://graph.facebook.com/search?q=larp&type=group&access_token=" + this._accessToken;
+      this._fbSearch = new FbSearch();
       this._eventsFormatter = new EventsFormatter();
     }
 
@@ -24,7 +21,12 @@ class FbEvents {
      */
     load(){
       return new Promise((resolve, reject) => {
-        this._fbPages.loadIds()
+        const groupsPromise = this._fbSearch.loadIds(this._groupsSearch);
+        const pagesPromise = this._fbSearch.loadIds(this._pagesSearch);
+
+        Promise.all([groupsPromise, pagesPromise]).then(idsArray => {
+          return idsArray[0].concat(idsArray[1]);
+        })
         .then(ids => {
           return this.getEvents(ids);
         })
@@ -43,8 +45,8 @@ class FbEvents {
 
     /**
      * Splits ids into chunks that facebook api can hadle (size 25)
-     * and requests data for events of the facebook pages with specified ids
-     * @param {string[]} ids - array of strings, ids of facebook pages related to larp
+     * and requests data for events of pages/groups with specified ids
+     * @param {string[]} ids - array of strings, ids of facebook pages/groups related to larp
      * @return {Promise} promise that resolve with an array of data responses from Facebook
      */
     getEvents(ids){
@@ -56,30 +58,12 @@ class FbEvents {
         for (let i=0; i<iterations; i++){
           var idString = idArray.splice(-25).join(",");
           var searchUrl = "https://graph.facebook.com/events?ids=" + idString + "&access_token=" + this._accessToken;
-          var prom = this.getUrl(searchUrl);
+          var prom = this._fbSearch.getUrl(searchUrl);
           promises.push(prom);
         }
         Promise.all(promises).then(data => resolve(data));
       });
     }
-
-    /**
-     * Make a call to specified url to get data
-     * @param {string} url
-     * @return {Promise} promise that resolves to an object with returned data
-     */
-    getUrl(url){
-      return new Promise((resolve, reject) => {
-        fetch(url)
-        .then(response => response.json())
-        .then(data => resolve(data))
-        .catch(err => {
-          console.log(err);
-          reject(err);
-        });
-      });
-    }
-
 }
 
 module.exports = FbEvents;
