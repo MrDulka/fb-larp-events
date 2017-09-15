@@ -2,11 +2,16 @@ var fetch = require('node-fetch');
 var FbSearch = require('./FbSearch.js');
 var EventsFormatter = require('./EventsFormatter.js');
 
+let Events = require('./Events');
+
 /**
  * Class for getting events from Facebook
+ * @augments Events
  */
-class FbEvents {
+class FbEvents extends Events {
     constructor(){
+      super();
+
       this._accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
       this._pagesSearch = "https://graph.facebook.com/search?q=larp&type=page&access_token=" + this._accessToken;
       this._groupsSearch = "https://graph.facebook.com/search?q=larp&type=group&access_token=" + this._accessToken;
@@ -15,6 +20,7 @@ class FbEvents {
     }
 
     /**
+     * @inheritDoc
      * loads events
      * @return {Promise} promise that resolves with an array of events that we
      * received from Facebook, formatted as instances of Event class
