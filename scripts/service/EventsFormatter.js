@@ -24,7 +24,7 @@ class FormatEvents{
    * @return {Object[]} events - array of objects
    */
   organize(data){
-    var events = [];\
+    var events = [];
     for (var elem of data){
       for (var id in elem){
         if (elem.hasOwnProperty(id) && elem[id].data){
