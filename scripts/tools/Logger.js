@@ -27,6 +27,7 @@ class Logger {
 
   info(msg, id){
     message = this.createMessage(msg, id);
+    console.log(message);
     this._infoStream.write(message);
   }
 

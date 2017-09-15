@@ -1,3 +1,5 @@
+const Logger = require('../tools/Logger.js');
+const logger = new Logger;
 /**
  * class for scheduling of regular loads into the database
  */
@@ -27,13 +29,15 @@ class ScheduledEvents {
      * and then store them using the serializeEvents class
      */
     load() {
+        logger.info("Started loading events from FB");
         this._inputEvents.load().then(events => {
-            events.forEach(event => {
+            events.forEach((event, ind) => {
+              logger.info("Saving an event numer " + ind);
               this._serializeEvents.save(event);
             });
+            logger.info("Finished loading");
         }).catch(err => {
           console.log(err);
-          // TODO: what else can we do on error?
         });
     }
 
@@ -42,6 +46,7 @@ class ScheduledEvents {
      */
     schedule() {
         this.stop();
+        logger.info("")
         this._timer = setInterval(this.load.bind(this), ScheduledEvents.HOUR());
         this.load();
     }
