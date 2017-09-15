@@ -19,7 +19,7 @@ class DataStores{
   setup(){
     const pool = new Pool({connectionString: this._sqlURL});
 
-    return pool;
+    return Promise.resolve(pool);
   }
 }
 
