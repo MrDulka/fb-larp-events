@@ -1,65 +1,72 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
-const MongoEvents = require('../database/MongoEvents.js');
+
 const SqlEvents = require('../database/SqlEvents.js');
 const FbEvents = require('../service/FbEvents.js');
+const HrajLarpEvents = require('../service/HrajLarpEvents');
 const ScheduledEvents = require('../service/ScheduledEvents.js');
+
 const EventsController = require('../controller/EventsController.js');
 
 /**
  * class representing the web application
  */
-class WebApplication{
-  /**
-   * create webapplication with properties linking to databases
-   */
-  constructor(pool){
-    this._pgPool = pool;
-  }
+class WebApplication {
+    /**
+     * create webapplication with properties linking to databases
+     */
+    constructor(pool, hrajLarpPool, logger) {
+        this._pgPool = pool;
+        this._hrajLarpPool = hrajLarpPool;
 
-  /**
-   * setup the application
-   * initiate mongoEvents and sqlEvents for interacting with the databases,
-   * scheduledEvents for regularly getting the events from facebook
-   * controller for managing user requests
-   */
-  setup(){
-    const sqlEvents = new SqlEvents(this._pgPool);
-    this.schedule(sqlEvents);
+        this._logger = logger;
+    }
 
-    const controller = new EventsController(app, sqlEvents);
+    /**
+     * setup the application
+     * initiate mongoEvents and sqlEvents for interacting with the databases,
+     * scheduledEvents for regularly getting the events from facebook
+     * controller for managing user requests
+     */
+    setup() {
+        const sqlEvents = new SqlEvents(this._pgPool, this._logger);
+        this.schedule(sqlEvents);
 
-    app.listen(process.env.PORT || 5000);
-    this.clientside();
-  }
+        new EventsController(app, sqlEvents);
 
-  /**
-   * schedule updating of the specified database
-   * @param db - instance of class for interacting with events in the database
-   */
-  schedule(db){
-    const fbEvents = new FbEvents();
-    const scheduledEvents = new ScheduledEvents(fbEvents, db);
-    scheduledEvents.schedule();
-  }
+        app.listen(process.env.PORT || 5000);
+        this.clientside();
+    }
 
-  /**
-   * run the client side of the app
-   */
-  clientside(){
-    app.set('views', __dirname + "/../../views");
-    app.set('view engine', 'ejs');
+    /**
+     * schedule updating of the specified database
+     * @param db - instance of class for interacting with events in the database
+     */
+    schedule(db) {
+        const fbEvents = new FbEvents(this._logger);
+        const hrajLarpEvents = new HrajLarpEvents(this._hrajLarpPool, this._logger);
+        const scheduledEvents = new ScheduledEvents([fbEvents, hrajLarpEvents], db, this._logger);
 
-    app.get('/', function(req, res){
-      res.render("index");
-    });
+        scheduledEvents.schedule();
+    }
 
-    app.get('/clientscript.js', function (req, res){
-      const script = fs.readFileSync(app.get('views') + "/clientscript.js", "utf8");
-      res.end(script);
-    });
-  }
+    /**
+     * run the client side of the app
+     */
+    clientside() {
+        app.set('views', __dirname + "/../../views");
+        app.set('view engine', 'ejs');
+
+        app.get('/', function (req, res) {
+            res.render("index");
+        });
+
+        app.get('/clientscript.js', function (req, res) {
+            const script = fs.readFileSync(app.get('views') + "/clientscript.js", "utf8");
+            res.end(script);
+        });
+    }
 
 }
 

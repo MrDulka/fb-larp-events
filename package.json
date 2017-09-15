@@ -18,12 +18,13 @@
   },
   "homepage": "https://github.com/MrDulka/fb-larp-events#readme",
   "dependencies": {
-    "ejs": "^2.5.7",
-    "express": "^4.15.4",
-    "franc": "^3.1.1",
-    "gdal": "^0.9.6",
-    "mongodb": "^2.2.31",
-    "node-fetch": "^1.7.2",
-    "pg": "^6.0.3"
+    "ejs": "2.5.7",
+    "express": "4.15.4",
+    "franc": "3.1.1",
+    "gdal": "0.9.6",
+    "mongodb": "2.2.31",
+    "node-fetch": "1.7.2",
+    "pg": "6.0.3",
+    "underscore": "1.8.3"
   }
 }
