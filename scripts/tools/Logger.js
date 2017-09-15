@@ -13,14 +13,6 @@ class Logger {
         this.LEVEL_NONE = 4;
 
         this.currentLevel = this.LEVEL_INFO;
-
-        // TODO: Fix. This is asynchronous, but the calls depends on it being synchronous.
-        this._streams = {
-            trace: fs.createWriteStream('logs/trace.txt', {flags: "a+"}),
-            info: fs.createWriteStream('logs/info.txt', {flags: "a+"}),
-            warn: fs.createWriteStream('logs/warn.txt', {flags: "a+"}),
-            error: fs.createWriteStream('logs/error.txt', {flags: "a+"})
-        };
     }
 
     setLevel(level) {
@@ -56,9 +48,7 @@ class Logger {
         args.unshift(new Date().toISOString());
         args.unshift("[Panther] ");
         if(this.currentLevel <= level) {
-            let message = console[method].apply(console, args);
-            this._streams[method].write(message);
-            return message;
+            return console[method].apply(console, args);
         } else {
             return '';
         }
