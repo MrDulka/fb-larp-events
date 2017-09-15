@@ -1,5 +1,5 @@
 var Event = require('../database/Event.js');
-var Locator = require('./Locator.js');
+var franc = require('franc');
 /**
  * class for formatting events
  */
@@ -24,7 +24,7 @@ class FormatEvents{
    * @return {Object[]} events - array of objects
    */
   organize(data){
-    var events = [];
+    var events = [];\
     for (var elem of data){
       for (var id in elem){
         if (elem.hasOwnProperty(id) && elem[id].data){
@@ -46,11 +46,10 @@ class FormatEvents{
       if (
           !event.place
           || !event.place.location
-          || !event.place.location.latitude
-          || !event.place.location.longitude
         ){
         return false;
       }
+      if()
       let now = new Date();
       let startTime = new Date(event.start_time);
       return now < startTime;
@@ -65,20 +64,8 @@ class FormatEvents{
    * event.place.location.region
    */
   localize(events){
-    const locator = new Locator();
-
-    let localizedEvents = events.map( event => {
-      let latitude = event.place.location.latitude;
-      let longitude = event.place.location.longitude
-
-      let region = locator.find(latitude,longitude);
-      event.place.location.region = region;
-
-      return event;
-    });
-
-    let filtered = localizedEvents.filter( event => {
-      return event.place.location.region;
+    let filtered = events.filter( event => {
+      return (franc(event.description) === 'ces');
     });
     return filtered;
   }
@@ -97,9 +84,9 @@ class FormatEvents{
         end_date: event.end_time
       };
       let location = {
-        latitude: event.place.location.latitude,
-        longitude: event.place.location.longitude,
-        name: event.place.location.city || event.place.location.region
+        latitude: event.place.location.latitude || null,
+        longitude: event.place.location.longitude || null,
+        name: event.place.location.city || event.place.location.region || "ČR"
       };
       let fbId = event.id;
 

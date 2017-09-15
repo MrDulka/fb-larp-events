@@ -1,4 +1,7 @@
 const Event = require('./Event.js');
+const Logger = require('../tools/Logger.js');
+const logger = new Logger;
+
 /**
   * This class represents Events in the postgreSQL database.
   */
