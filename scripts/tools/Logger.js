@@ -21,23 +21,23 @@ class Logger {
    * @param {id} - UID
    */
   trace(msg, id){
-    message = this.createMessage(msg, id);
+    let message = this.createMessage(msg, id);
     this._traceStream.write(message);
   }
 
   info(msg, id){
-    message = this.createMessage(msg, id);
+    let message = this.createMessage(msg, id);
     console.log(message);
     this._infoStream.write(message);
   }
 
   warn(msg, id){
-    message = this.createMessage(msg, id);
+    let message = this.createMessage(msg, id);
     this._warnStream.write(message);
   }
 
   error(msg, id){
-    message = this.createMessage(msg, id);
+    let message = this.createMessage(msg, id);
     this._errorStream.write(message);
   }
 
