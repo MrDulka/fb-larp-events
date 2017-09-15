@@ -30,9 +30,9 @@ class SqlEvents {
       let web = 'https://www.facebook.com/' + event.fbId;
       let added_by = 1;
 
-      let selectSql = `SELECT * FROM public.csld_events WHERE web = '${web}'`;
+      let selectSql = `SELECT * FROM public.event WHERE web = '${web}'`;
 
-      let insertSql = `INSERT INTO public.csld_events ` +
+      let insertSql = `INSERT INTO public.event ` +
                       `(name, description, loc, source, "from", "to", ` +
                       `latitude, longitude, web, added_by) ` +
                       `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
@@ -55,7 +55,7 @@ class SqlEvents {
      */
     load(){
       return new Promise((resolve, reject) => {
-        let selectSql = `SELECT * FROM public.csld_events`;
+        let selectSql = `SELECT * FROM public.event`;
         this._pgPool.query(selectSql).then(result => {
           let events = this.convert(result);
           resolve(events);
