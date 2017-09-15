@@ -28,16 +28,23 @@ class WebApplication{
   setup(){
     const mongoEvents = new MongoEvents(this._mongoDB);
     const sqlEvents = new SqlEvents(this._pgPool);
+    this.schedule(mongoEvents);
+    this.schedule(sqlEvents);
 
-    const fbEvents = new FbEvents();
-    const scheduledEvents = new ScheduledEvents(fbEvents, sqlEvents);
-    scheduledEvents.schedule();
+    const controller = new EventsController(app, mongoEvents);
 
-    const controller = new EventsController(app, sqlEvents);
-
-    app.set('port', (process.env.PORT || 5000));
-    app.listen(app.get('port'));
+    app.listen(process.env.PORT || 5000);
     this.clientside();
+  }
+
+  /**
+   * schedule updating of the specified database
+   * @param db - instance of class for interacting with events in the database
+   */
+  schedule(db){
+    const fbEvents = new FbEvents();
+    const scheduledEvents = new ScheduledEvents(fbEvents, db);
+    scheduledEvents.schedule();
   }
 
   /**

@@ -46,8 +46,9 @@ class FbEvents {
     /**
      * Splits ids into chunks that facebook api can hadle (size 25)
      * and requests data for events of pages/groups with specified ids
-     * @param {string[]} ids - array of strings, ids of facebook pages/groups related to larp
-     * @return {Promise} promise that resolve with an array of data responses from Facebook
+     * @param {string[]} ids - array of strings, ids of facebook pages/groups
+     * @return {Promise} promise that resolve with an array of data responses
+     * from Facebook
      */
     getEvents(ids){
       return new Promise((resolve, reject) => {
@@ -57,7 +58,8 @@ class FbEvents {
 
         for (let i=0; i<iterations; i++){
           var idString = idArray.splice(-25).join(",");
-          var searchUrl = "https://graph.facebook.com/events?ids=" + idString + "&access_token=" + this._accessToken;
+          var searchUrl = "https://graph.facebook.com/events?ids=" +
+                          idString + "&access_token=" + this._accessToken;
           var prom = this._fbSearch.getUrl(searchUrl);
           promises.push(prom);
         }

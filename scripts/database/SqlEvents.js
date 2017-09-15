@@ -14,7 +14,8 @@ class SqlEvents {
     }
 
     /**
-     * Save the event into the database, if it is not already there - identified by fbId
+     * Save the event into the database, if it is not already there
+     * - identified by fbId
      * @param {Event} event - Event to be stored in the database
      */
     save(event){
@@ -29,12 +30,9 @@ class SqlEvents {
       let web = 'https://www.facebook.com/' + event.fbId;
       let added_by = 1;
 
-      /** changed public.csld_events to event for testing
-       * TODO: change back
-       */
-      let selectSql = `SELECT * FROM event WHERE web = '${web}'`;
+      let selectSql = `SELECT * FROM public.csld_events WHERE web = '${web}'`;
 
-      let insertSql = `INSERT INTO event ` +
+      let insertSql = `INSERT INTO public.csld_events ` +
                       `(name, description, loc, source, "from", "to", ` +
                       `latitude, longitude, web, added_by) ` +
                       `VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10)`;
@@ -53,13 +51,13 @@ class SqlEvents {
 
     /**
      * Load all events from the database
-     * @return {Promise} - promise that resolves with array of events in the database
+     * @return {Promise} - resolves with array of events in the database
      */
     load(){
       return new Promise((resolve, reject) => {
-        let selectSql = `SELECT * FROM event`;
+        let selectSql = `SELECT * FROM public.csld_events`;
         this._pgPool.query(selectSql).then(result => {
-          var events = this.convert(result);
+          let events = this.convert(result);
           resolve(events);
         });
       });
@@ -72,18 +70,19 @@ class SqlEvents {
      */
     convert(events){
       return events.rows.map(event => {
-        var name = event.name;
-        var description = event.description;
-        var date = {
+        let name = event.name;
+        let description = event.description;
+        let date = {
           start_date: event.from.toISOString(),
           end_date: event.to.toISOString()
         };
-        var location = {
+        let location = {
           latitude: event.latitude,
           longitude: event.longitude,
           name: event.loc
         };
-        var fbId = event.web.match(/\d+$/)[0];
+        //matches the digits at the end of the web address
+        let fbId = event.web.match(/\d+$/)[0];
         return new Event(name, description, date, location, fbId);
       });
     }

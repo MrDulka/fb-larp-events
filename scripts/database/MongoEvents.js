@@ -13,7 +13,7 @@ class MongoEvents {
 
   /**
    * loads all events from the database
-   * @return {Promise} promise that resolves with Array of events in the database
+   * @return {Promise} - resolves with Array of events in the database
    */
   load(){
     return this._database.collection('events').find().toArray();
@@ -33,6 +33,9 @@ class MongoEvents {
     );
   }
 
+  /**
+   * clear the database
+   */
   clear(){
     this._database.collection('events').remove();
   }

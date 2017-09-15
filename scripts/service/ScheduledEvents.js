@@ -12,7 +12,8 @@ class ScheduledEvents {
 
     /**
      * @param {Object} inputEvents instance of class for getting the events
-     * @param {Object} serializeEvents instance of class for saving the events in database
+     * @param {Object} serializeEvents instance of class for saving the events
+     * in database
      */
     constructor(inputEvents, serializeEvents) {
         this._timer = null;

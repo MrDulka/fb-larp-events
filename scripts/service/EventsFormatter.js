@@ -6,7 +6,7 @@ var Locator = require('./Locator.js');
 
 class FormatEvents{
   /**
-   * @param {Object[]} data  - array of objects received and put together from FB
+   * @param {Object[]} data - array of objects received and put together from FB
    * @return {Event[]} events - array of Events
    */
   format(data){
@@ -18,8 +18,9 @@ class FormatEvents{
   }
 
   /**
-   * Puts all events in one flat array, discards empty objects, makes things organized
-   * @param {Object[]} data  - array of objects received and put together from FB
+   * Puts all events in one flat array, discards empty objects,
+   * makes things organized
+   * @param {Object[]} data - array of objects received and put together from FB
    * @return {Object[]} events - array of objects
    */
   organize(data){
@@ -35,17 +36,23 @@ class FormatEvents{
   }
 
   /**
-   * Filteres events, only those happening in the future and with specified coordinates remain
+   * Filteres events, only those with specified location coordinates and
+   * happening in the future remain
    * @param {Object[]} events - array of objects, organized
    * @return {Object[]} - array of objects, filtered
    */
   filter(events){
     return events.filter( event => {
-      if (!event.place || !event.place.location || !event.place.location.latitude || !event.place.location.longitude){
+      if (
+          !event.place
+          || !event.place.location
+          || !event.place.location.latitude
+          || !event.place.location.longitude
+        ){
         return false;
       }
-      var now = new Date();
-      var startTime = new Date(event.start_time);
+      let now = new Date();
+      let startTime = new Date(event.start_time);
       return now < startTime;
     });
   }
@@ -54,16 +61,23 @@ class FormatEvents{
    * Finds out the region corresponding to the coordinates of the events
    * and filteres out those that do not fall into one of the preferred regions
    * @param {Object[]} events - array of objects, filtered
-   * @return {Object[]} filtered - array of objects with new added property event.place.location.region
+   * @return {Object[]} filtered - array of objects with new added property
+   * event.place.location.region
    */
   localize(events){
     const locator = new Locator();
-    var localizedEvents = events.map( event => {
-      let region = locator.find(event.place.location.latitude, event.place.location.longitude);
+
+    let localizedEvents = events.map( event => {
+      let latitude = event.place.location.latitude;
+      let longitude = event.place.location.longitude
+
+      let region = locator.find(latitude,longitude);
       event.place.location.region = region;
+
       return event;
     });
-    var filtered = localizedEvents.filter( event => {
+
+    let filtered = localizedEvents.filter( event => {
       return event.place.location.region;
     });
     return filtered;
@@ -76,18 +90,18 @@ class FormatEvents{
    */
   classify(events){
     return events.map( event => {
-      var name = event.name;
-      var description = event.description;
-      var date = {
+      let name = event.name;
+      let description = event.description;
+      let date = {
         start_date: event.start_time,
         end_date: event.end_time
       };
-      var location = {
+      let location = {
         latitude: event.place.location.latitude,
         longitude: event.place.location.longitude,
         name: event.place.location.city || event.place.location.region
       };
-      var fbId = event.id;
+      let fbId = event.id;
 
       return new Event(name, description, date, location, fbId);
     });
