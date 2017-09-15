@@ -14,9 +14,8 @@ class WebApplication{
   /**
    * create webapplication with properties linking to databases
    */
-  constructor(databases){
-    this._mongoDB = databases[0];
-    this._pgPool = databases[1];
+  constructor(pool){
+    this._pgPool = pool;
   }
 
   /**
@@ -26,12 +25,10 @@ class WebApplication{
    * controller for managing user requests
    */
   setup(){
-    const mongoEvents = new MongoEvents(this._mongoDB);
     const sqlEvents = new SqlEvents(this._pgPool);
-    this.schedule(mongoEvents);
     this.schedule(sqlEvents);
 
-    const controller = new EventsController(app, mongoEvents);
+    const controller = new EventsController(app, sqlEvents);
 
     app.listen(process.env.PORT || 5000);
     this.clientside();

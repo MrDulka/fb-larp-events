@@ -9,8 +9,7 @@ class DataStores{
   /**
    * initiate datastores with the provided links to databases
    */
-  constructor(mongoURL, sqlURL){
-    this._mongoURL = mongoURL;
+  constructor(sqlURL){
     this._sqlURL = sqlURL;
   }
   /**
@@ -18,10 +17,9 @@ class DataStores{
    * @return {Promise} promise that resolves with an array of databases
    */
   setup(){
-    const mongo = MongoClient.connect(this._mongoURL);
     const pool = new Pool({connectionString: this._sqlURL});
 
-    return Promise.all([mongo, pool]);
+    return Promise.resolve(pool);
   }
 }
 

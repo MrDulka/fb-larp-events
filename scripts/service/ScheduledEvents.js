@@ -19,7 +19,7 @@ class ScheduledEvents {
      */
     constructor(inputEvents, serializeEvents) {
         this._timer = null;
-        this._HOUR = 60 * 60 * 1000
+        this._HOUR = 60 * 60 * 1000;
         this._inputEvents = inputEvents;
         this._serializeEvents = serializeEvents;
     }
