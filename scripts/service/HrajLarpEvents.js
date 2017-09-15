@@ -49,7 +49,7 @@ class HrajLarpEvents extends Events {
                 longitude: null,
                 name: event.place
             };
-            return new Event(event.name, event.anotation, date, location, `https://hrajlarp.cz/game/detail?gameId=event.id`, source, amountOfPlayers, 'cz');
+            return new Event(event.name, event.anotation, date, location, `https://hrajlarp.cz/game/detail?gameId=${event.id}`, source, amountOfPlayers, 'cz');
         });
     }
 }
