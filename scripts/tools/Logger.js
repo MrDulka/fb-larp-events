@@ -18,26 +18,33 @@ class Logger {
   /*
    * All methods log the passed in messages into related files
    * @param {string} msg - message to log
+   * @param {id} - UID
    */
-  trace(msg){
-    let message = new Date().toISOString() + " : " + msg + "\n";
+  trace(msg, id){
+    message = this.createMessage(msg, id);
     this._traceStream.write(message);
   }
 
-  info(msg){
-    let message = new Date().toISOString() + " : " + msg + "\n";
+  info(msg, id){
+    message = this.createMessage(msg, id);
     this._infoStream.write(message);
   }
 
-  warn(msg){
-    let message = new Date().toISOString() + " : " + msg + "\n";
+  warn(msg, id){
+    message = this.createMessage(msg, id);
     this._warnStream.write(message);
   }
 
-  error(msg){
-    let message = new Date().toISOString() + " : " + msg + "\n";
+  error(msg, id){
+    message = this.createMessage(msg, id);
     this._errorStream.write(message);
   }
+
+  createMessage(msg, id){
+    let UID = id ? "UID: " + id + " " : "";
+    return new Date().toISOString() + " : " + UID + msg + "\n";
+  }
+
 
 }
 
