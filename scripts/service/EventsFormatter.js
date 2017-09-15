@@ -49,7 +49,6 @@ class FormatEvents{
         ){
         return false;
       }
-      if()
       let now = new Date();
       let startTime = new Date(event.start_time);
       return now < startTime;
