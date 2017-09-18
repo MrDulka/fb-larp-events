@@ -15,7 +15,7 @@ class FbEvents extends Events {
         this._accessToken = "EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
         this._pagesSearch = "https://graph.facebook.com/search?q=larp&type=page&access_token=" + this._accessToken;
         this._groupsSearch = "https://graph.facebook.com/search?q=larp&type=group&access_token=" + this._accessToken;
-        this._fbSearch = new FbSearch();
+        this._fbSearch = new FbSearch(logger);
         this._eventsFormatter = new EventsFormatter();
     }
 
@@ -43,7 +43,7 @@ class FbEvents extends Events {
         }).then(data => {
             return this._eventsFormatter.format(data);
         }).catch(err => {
-            console.log(err);
+            this._logger.error(`FbEvents#load Error`, err);
         });
     }
 

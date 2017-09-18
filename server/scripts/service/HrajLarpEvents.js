@@ -28,6 +28,9 @@ class HrajLarpEvents extends Events {
 
         return this._pgPool.query(`SELECT * FROM game WHERE date > now()`).then(result => {
             return this.convert(result.rows);
+        })
+        .catch(err => {
+            this._logger.error(`HrajLarpEvents#load Error:`, err);
         });
     }
 

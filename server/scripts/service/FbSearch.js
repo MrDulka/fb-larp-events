@@ -5,8 +5,9 @@ var fetch = require('node-fetch');
  */
 
 class FbSearch {
-    constructor() {
+    constructor(logger) {
         this._maxIterations = 10;
+        this._logger = logger;
     }
 
     /**
@@ -37,10 +38,9 @@ class FbSearch {
                 }
                 resolve(ids);
             })
-                .catch(err => {
-                    console.log(err);
-                    reject(err);
-                });
+            .catch(err => {
+                this._logger.error(`FbSearch#loadIds Error:`, err);
+            });
         });
     }
 
@@ -55,8 +55,7 @@ class FbSearch {
                 .then(response => response.json())
                 .then(data => resolve(data))
                 .catch(err => {
-                    console.log(err);
-                    reject(err);
+                    this._logger.error(`FbSearch#getUrl Error:`, err);
                 });
         });
     }

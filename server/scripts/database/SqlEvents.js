@@ -21,7 +21,6 @@ class SqlEvents extends Events {
 
     /**
      * Save the event into the database, if it is not already there
-     * - identified by fbId
      * @param {Event} event - Event to be stored in the database
      */
     save(event) {
@@ -43,13 +42,15 @@ class SqlEvents extends Events {
             } else {
                 return this._pgPool.query(insertSql, values);
             }
+        }).catch(err => {
+            this._logger.error(`SqlEvents#save Error:`, err);
         });
     }
 
 
     /**
      * Load all events from the database
-     * @return {Promise} - resolves with array of events in the database
+     * @return {Promise|Event[]} - resolves with array of events in the database
      */
     load() {
         this._logger.info(`SqlEvents#load`);
@@ -57,6 +58,8 @@ class SqlEvents extends Events {
         let selectSql = `SELECT * FROM public.event`;
         return this._pgPool.query(selectSql).then(result => {
             return this.convert(result);
+        }).catch(err => {
+            this._logger.error(`SqlEvents#load Error`, err);
         });
     }
 
