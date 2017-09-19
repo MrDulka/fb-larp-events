@@ -30,7 +30,7 @@ class SqlEvents extends Events {
         let selectSql = `SELECT * FROM public.event WHERE web = '${web}'`;
 
         let insertSql = `INSERT INTO public.event
-            (name, description, loc, source, "from", "to", latitude, longitude, web, added_by, amoutOfPlayers, language)
+            (name, description, loc, source, "from", "to", latitude, longitude, web, added_by, amountOfPlayers, language)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
         `;
         let values = [event.name, event.description, event.location.name, event.source, event.date.start_date, event.date.end_date,

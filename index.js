@@ -1,5 +1,5 @@
-const DataStores = require('./scripts/database/DataStores.js');
-const WebApplication = require('./scripts/webapp/WebApplication');
+const DataStores = require('./server/scripts/database/DataStores.js');
+const WebApplication = require('./server/scripts/webapp/WebApplication');
 
 const sqlURL = 'postgresql://csld:csld@10.0.75.2:5432/csld';
 const hrajLarpUrl = 'postgresql://hrajlarp:hrajlarp@10.0.75.2:5432/hrajlarp';
@@ -7,7 +7,7 @@ const hrajLarpUrl = 'postgresql://hrajlarp:hrajlarp@10.0.75.2:5432/hrajlarp';
 const dataStores = new DataStores([sqlURL, hrajLarpUrl]);
 
 // Have only one logger for application.
-const Logger = require('./scripts/tools/Logger.js');
+const Logger = require('./server/scripts/tools/Logger.js');
 const logger = new Logger;
 
 dataStores.setup().then(databases => {
