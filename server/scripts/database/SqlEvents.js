@@ -49,7 +49,10 @@ class SqlEvents extends Events {
         })
         .then(result => {
             if (!result) return;
-            return this.matchGame(event, result.rows[0].id);
+
+            this.matchGame(event, result.rows[0].id);
+            this.labelEvent(event, result.rows[0].id);
+            return;
         })
         .catch(err => {
             this._logger.error(`SqlEvents#save Error:`, err);
@@ -113,8 +116,33 @@ class SqlEvents extends Events {
             }
         })
         .catch(err =>{
-            this._logger.error(`SqlEvents#matchGame Error:`, err);
+            this._logger.error(`SqlEvents#matchGame Error: `, err);
+        });
+    }
+
+    /**
+     * Labels the event through table event_has_lables
+     * @param {Event} event
+     * @param {number} eventId - id of the event that was just inserted into the database
+     */
+    labelEvent(event, eventId){
+        const komorniLabelId = 1;
+        let findLabelIdSql = `SELECT * FROM public.csld_label WHERE name = '${event.source}'`;
+
+        this._pgPool.query(findLabelIdSql)
+        .then(result => {
+            let labelId = result.rows[0].id;
+            let insertSql = `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${labelId});`;
+
+            if (event.source === 'HrajuLarpy' || event.source === 'HrajLarp'){
+                insertSql += `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${komorniLabelId});`
+            }
+
+            return this._pgPool.query(insertSql);
         })
+        .catch(err => {
+            this._logger.error(`SqlEvents#label Error: `, err);
+        });
     }
 }
 
