@@ -1,6 +1,7 @@
 let Event = require('../database/Event');
 let Events = require('./Events');
 let fetch = require('node-fetch');
+let sanitizeHtml = require('sanitize-html');
 
 /**
  * This class loads events from Hraju Larpy
@@ -47,16 +48,17 @@ class HrajuLarpyEvents extends Events{
     convert(events) {
         return events.map(event => {
             let source = 'HrajuLarpy';
+            let description = sanitizeHtml(event.description, {allowedTags: [], allowedAttributes: []});
             let date = {
               start_date: new Date(event.start),
               end_date: new Date(event.end)
             }
             let location = {
-              latitude: null,
-              longitude: null,
+              latitude: event.latitude || null,
+              longitude: event.longitude || null,
               name: event.location
             }
-            return new Event(event.name, event.description, date, location, event.website, source, event.capacity, 'cz');
+            return new Event(event.name, description, date, location, event.website, source, event.capacity, 'cz');
         });
     }
 }

@@ -24,6 +24,8 @@ class SqlEvents extends Events {
      * @param {Event} event - Event to be stored in the database
      */
     save(event) {
+        if (!event) return;
+
         this._logger.info(`SqlEvents#save Event: `, event);
 
         const web = event.web;
