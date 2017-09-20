@@ -34,17 +34,24 @@ class SqlEvents extends Events {
         let insertSql = `INSERT INTO public.event
             (name, description, loc, source, "from", "to", latitude, longitude, web, added_by, amountOfPlayers, language)
             VALUES ($1, $2, $3, $4, $5, $6, $7, $8, $9, $10, $11, $12)
+            RETURNING id
         `;
         let values = [event.name, event.description, event.location.name, event.source, event.date.start_date, event.date.end_date,
             event.location.latitude, event.location.longitude, web, 1, event.amountOfPlayers, event.language];
 
-        this._pgPool.query(selectSql).then(result => {
+        this._pgPool.query(selectSql)
+        .then(result => {
             if (result.rows.length > 0) {
                 return null;
             } else {
                 return this._pgPool.query(insertSql, values);
             }
-        }).catch(err => {
+        })
+        .then(result => {
+            if (!result) return;
+            return this.matchGame(event, result.rows[0].id);
+        })
+        .catch(err => {
             this._logger.error(`SqlEvents#save Error:`, err);
         });
     }
@@ -61,7 +68,7 @@ class SqlEvents extends Events {
         return this._pgPool.query(selectSql).then(result => {
             return this.convert(result);
         }).catch(err => {
-            this._logger.error(`SqlEvents#load Error`, err);
+            this._logger.error(`SqlEvents#load Error:`, err);
         });
     }
 
@@ -83,6 +90,31 @@ class SqlEvents extends Events {
             };
             return new Event(event.name, event.description, date, location, event.web, 'LarpDb', amountOfPlayers, language);
         });
+    }
+
+    /**
+     * Matches events with games in the database
+     * @param {Event} event
+     * @param {number} eventId - id of the event that was just inserted into the database
+     */
+    matchGame(event, eventId){
+        let findGameSql = `SELECT * FROM public.csld_game WHERE name = '${event.name}'`;
+
+        this._pgPool.query(findGameSql)
+        .then(result => {
+            //match if there is only one game with the same name as the event
+            if (result.rows.length === 1) {
+                let gameId = result.rows[0].id;
+                let insertSql = `INSERT INTO public.csld_game_has_event (game_id, event_id) VALUES (${gameId}, ${eventId})`;
+                return this._pgPool.query(insertSql);
+            }
+            else {
+                return null;
+            }
+        })
+        .catch(err =>{
+            this._logger.error(`SqlEvents#matchGame Error:`, err);
+        })
     }
 }
 
