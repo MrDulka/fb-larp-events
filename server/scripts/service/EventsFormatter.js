@@ -1,5 +1,6 @@
 const Event = require('../database/Event.js');
 const franc = require('franc');
+const _ = require('underscore');
 
 /**
  * class for formatting events
@@ -10,45 +11,21 @@ class FormatEvents {
      * @return {Event[]} events - array of Events
      */
     format(data) {
-        var events = this.organize(data);
-        events = this.filter(events);
-        events = this.localize(events);
+        let events = this.filterFuture(data);
+        events = this.filterCzechOnly(events);
+        events = this.filterLarpRelated(events);
+        events = this.filterDuplicates(events);
         events = this.classify(events);
         return events;
     }
 
     /**
-     * Puts all events in one flat array, discards empty objects,
-     * makes things organized
-     * @param {Object[]} data - array of objects received and put together from FB
-     * @return {Event[]} events - array of objects
-     */
-    organize(data) {
-        var events = [];
-        for (var elem of data) {
-            for (var id in elem) {
-                if (elem.hasOwnProperty(id) && elem[id].data) {
-                    events = events.concat(elem[id].data);
-                }
-            }
-        }
-        return events;
-    }
-
-    /**
-     * Filters events, only those with specified location coordinates and
-     * happening in the future remain
-     * @param {Object[]} events - array of objects, organized
+     * Filters events, only those happening in the future remain
+     * @param {Object[]} events - array of objects
      * @return {Object[]} - array of objects, filtered
      */
-    filter(events) {
+    filterFuture(events) {
         return events.filter(event => {
-            if (
-                !event.place
-                || !event.place.location
-            ) {
-                return false;
-            }
             let now = new Date();
             let startTime = new Date(event.start_time);
             return now < startTime;
@@ -56,15 +33,29 @@ class FormatEvents {
     }
 
     /**
-     * Finds out the region corresponding to the coordinates of the events
-     * and filteres out those that do not fall into one of the preferred regions
-     * @param {Object[]} events - array of objects, filtered
-     * @return {Object[]} filtered - array of objects with new added property
-     * event.place.location.region
+     * Filters out events that are not Czech - do not have description in Czech language
      */
-    localize(events) {
+    filterCzechOnly(events) {
         return events.filter(event => {
             return (franc(event.description) === 'ces');
+        });
+    }
+
+    /**
+     * Filters out events that are not larp related
+     */
+    filterLarpRelated(events) {
+        return events.filter(event => {
+            return (event.name.indexOf('larp') > -1 || event.description.indexOf('larp') > -1);
+        });
+    }
+
+    /**
+     * Filters out duplicates
+     */
+    filterDuplicates(events) {
+        return _.uniq(events, (event) => {
+            return event.id;
         });
     }
 
@@ -81,10 +72,19 @@ class FormatEvents {
                 start_date: event.start_time,
                 end_date: event.end_time
             };
+
+            let latitude = null;
+            let longitude = null;
+            let city = 'ČR';
+            if (event.place && event.place.location) {
+                latitude = event.place.location.latitude || null;
+                longitude = event.place.location.longitude || null;
+                city = event.place.location.city || 'ČR';
+            }
             let location = {
-                latitude: event.place.location.latitude || null,
-                longitude: event.place.location.longitude || null,
-                name: event.place.location.city || event.place.location.region || "ČR"
+                latitude: latitude,
+                longitude: longitude,
+                name: city
             };
             let web = `https://www.facebook.com/${event.id}`;
 

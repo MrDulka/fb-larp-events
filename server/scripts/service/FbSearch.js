@@ -1,4 +1,5 @@
-var fetch = require('node-fetch');
+const fetch = require('node-fetch');
+const _ = require('underscore');
 
 /**
  * Class for searching on Facebook
@@ -6,25 +7,117 @@ var fetch = require('node-fetch');
 
 class FbSearch {
     constructor(logger) {
-        this._maxIterations = 10;
+        this._maxIterations = 5;
         this._logger = logger;
+        this._accessToken = "&access_token=EAAO1Gik9JWQBAEOTDe26hxuCGgvZAsVTcZBZBws5izC36yyEY9JLwdpXprKIcxq9nYRTrRBnrpwPWUKvKZAa0UmLG1jrjaZCKI48umheRxYIsiXjPLjhCWi2rjMDU34ScvRpWSagmmyMa5YLNHETe6rgKyqKhVQY5GBIZCwL8FuQZDZD";
     }
 
     /**
-     * Get the IDs, iterate over the paginated results returned from FB,
-     * using their provided "next" link
-     * @param {string} firstUrl - url with which we start the search
-     * @return {Promise} promise that resolves to an Array of IDs as strings
+     * Search for events for all the passed in queries
+     * @param {Object[]} searchArray - array of search queries + types that should be searched
+     * @return {Promise|Object[]} promise that resolves with array of events returned from Facebook
      */
-    loadIds(firstUrl) {
+    searchAll(searchArray){
+        let promiseArray = [];
+        searchArray.forEach(search => {
+            promiseArray.push(this.searchForEvents(search));
+        });
+
+        return Promise.all(promiseArray).then( data => {
+            return _.flatten(data);
+        }).catch(err => {
+            this._logger.error('FbSearch#seachAll Error: ', err);
+        });
+    }
+
+    /**
+     * Searches for events on Facebook
+     * @param {Object} search - what to search for, specified by query and type
+     * @return {Promise|Object[]} promise that resolves with array of events returned from Facebook
+     */
+    searchForEvents(search) {
+        let url = `https://graph.facebook.com/search?q=${search.query}&type=${search.type}` + this._accessToken;
+
         return new Promise((resolve, reject) => {
-            var ids = [];
-            var result = this.getUrl(firstUrl);
+          let result = this.getAll(url);
+          if(search.type === 'group' || search.type === 'page'){
+              result.then(data => {
+                  let ids = data.map(el => el.id);
+                  return this.getEventsFromIds(ids);
+              }).then(data => {
+                  let events = this.organize(data);
+                  resolve(events);
+              }).catch(err => {
+                  this._logger.error('FbSearch#seachForEvents Error: ', err);
+              });
+          }
+          else if(search.type === 'event'){
+              result.then(events => {
+                  resolve(events);
+              }).catch(err => {
+                  this._logger.error('FbSearch#seachForEvents Error: ', err);
+              });
+          }
+        });
+
+    }
+
+    /**
+     * Puts all events in one flat array, discards empty objects,
+     * makes things organized
+     * @param {Object[]} data - array of objects received and put together from FB
+     * @return {Object[]} events - array of objects
+     */
+    organize(data) {
+        var events = [];
+        for (var elem of data) {
+            for (var id in elem) {
+                if (elem.hasOwnProperty(id) && elem[id].data) {
+                    events = events.concat(elem[id].data);
+                }
+            }
+        }
+        return events;
+    }
+
+    /**
+     * Splits ids into chunks that facebook api can hadle (size 25)
+     * and requests data for events of pages/groups with specified ids
+     * @param {string[]} ids - array of strings, ids of facebook pages/groups
+     * @return {Promise} promise that resolve with an array of data responses
+     * from Facebook
+     */
+    getEventsFromIds(ids) {
+        let idArray = ids;
+        let iterations = Math.ceil(idArray.length / 25);
+        let promises = [];
+
+        for (let i = 0; i < iterations; i++) {
+            let idString = idArray.splice(-25).join(",");
+            let searchUrl = "https://graph.facebook.com/events?ids=" +
+                idString + this._accessToken;
+            let prom = this.getUrl(searchUrl);
+            promises.push(prom);
+        }
+        return Promise.all(promises);
+    }
+
+    /**
+     * Make a request to the url provided and then iterate over the paginated
+     * results, making more requests to the provided "next" urls
+     * @param {string} firstUrl - url with which we start the search
+     * @return {Promise|Array} results put together in one array
+     */
+    getAll(firstUrl) {
+        return new Promise((resolve, reject) => {
+            let resultData = [];
+            let result = this.getUrl(firstUrl);
 
             for (let i = 0; i < this._maxIterations - 1; i++) {
                 result = result.then((data) => {
-                    data.data.forEach(elem => ids.push(elem.id));
-                    if (!data.paging.next) {
+                    if (!data) return;
+                    data.data.forEach(elem => resultData.push(elem));
+                    if (!data.paging || !data.paging.next) {
                         return;
                     } else {
                         return this.getUrl(data.paging.next);
@@ -34,12 +127,12 @@ class FbSearch {
 
             result.then((data) => {
                 if (data) {
-                    data.data.forEach(elem => ids.push(elem.id));
+                    data.data.forEach(elem => resultData.push(elem));
                 }
-                resolve(ids);
+                resolve(resultData);
             })
             .catch(err => {
-                this._logger.error(`FbSearch#loadIds Error:`, err);
+                this._logger.error(`FbSearch#getAll Error:`, err);
             });
         });
     }
