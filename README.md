@@ -1,4 +1,2 @@
 # fb-larp-events
-Getting larp related events from facebook
-
-https://larp-events.herokuapp.com/
+Getting events for the larp database calendar and more

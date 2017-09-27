@@ -58,17 +58,6 @@ class WebApplication {
      * run the client side of the app
      */
     clientside() {
-        app.set('views', __dirname + "/../../views");
-        app.set('view engine', 'ejs');
-
-        app.get('/', function (req, res) {
-            res.render("index");
-        });
-
-        app.get('/clientscript.js', function (req, res) {
-            const script = fs.readFileSync(app.get('views') + "/clientscript.js", "utf8");
-            res.end(script);
-        });
     }
 
 }
