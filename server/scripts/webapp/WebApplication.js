@@ -3,7 +3,7 @@ const fs = require('fs');
 const app = express();
 
 const SqlEvents = require('../database/SqlEvents.js');
-const FbEvents = require('../service/FbEvents.js');
+const UserFbEvents = require('../service/UserFbEvents.js');
 const HrajLarpEvents = require('../service/HrajLarpEvents');
 const HrajuLarpyEvents = require('../service/HrajuLarpyEvents');
 const ScheduledEvents = require('../service/ScheduledEvents.js');
@@ -45,7 +45,8 @@ class WebApplication {
      * @param db - instance of class for interacting with events in the database
      */
     schedule(db) {
-        const fbEvents = new FbEvents(this._logger);
+        const userFbEvents = new UserFbEvents(this._pgPool, this._logger);
+        const fbEvents = userFbEvents.initiateFbEvents();
         const hrajLarpEvents = new HrajLarpEvents(this._hrajLarpPool, this._logger);
         const hrajuLarpyEvents = new HrajuLarpyEvents(this._logger);
         const scheduledEvents = new ScheduledEvents([fbEvents, hrajLarpEvents, hrajuLarpyEvents], db, this._logger);

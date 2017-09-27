@@ -39,9 +39,8 @@ class FbSearch {
         let url = `https://graph.facebook.com/search?q=${search.query}&type=${search.type}` + this._accessToken;
 
         return new Promise((resolve, reject) => {
-          let result = this.getAll(url);
           if(search.type === 'group' || search.type === 'page'){
-              result.then(data => {
+              this.getAll(url).then(data => {
                   let ids = data.map(el => el.id);
                   return this.getEventsFromIds(ids);
               }).then(data => {
@@ -52,11 +51,14 @@ class FbSearch {
               });
           }
           else if(search.type === 'event'){
-              result.then(events => {
+              this.getAll(url).then(events => {
                   resolve(events);
               }).catch(err => {
                   this._logger.error('FbSearch#seachForEvents Error: ', err);
               });
+          }
+          else {
+              resolve([]);
           }
         });
 

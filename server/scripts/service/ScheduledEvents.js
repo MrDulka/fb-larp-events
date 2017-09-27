@@ -30,7 +30,7 @@ class ScheduledEvents {
      * and then store them using the serializeEvents class
      */
     load() {
-        this._logger.info("ScheduledEvents#load Started loading events from FB");
+        this._logger.info("ScheduledEvents#load Started loading events");
         return Promise.all(
             this._inputEvents.map(source => source.load())
         ).then(events => {
