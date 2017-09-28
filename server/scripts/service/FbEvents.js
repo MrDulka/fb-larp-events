@@ -31,6 +31,8 @@ class FbEvents extends Events {
      * received from Facebook, formatted as instances of Event class
      */
     load() {
+        this._logger.info('FbEvents#load');
+
         return this._promisedQueries.then(queries => {
             return this._fbSearch.searchAll(queries);
         }).then(events => {
