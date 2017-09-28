@@ -18,9 +18,12 @@ class Game {
      * @param {Number} amountOfPlayed
      * @param {Number} amountOfRatings
      * @param {Number} averageRating
+     * @param {Number} id - game id in the database
+     * @param {Number[]} community - array of UserIds of players that played or wish
+     * to play this game in the future
      */
     constructor(name, description, year, web, hours, days, players, menRole, womenRole, bothRole,
-        amountOfComments, amountOfPlayed, amountOfRatings, averageRating) {
+        amountOfComments, amountOfPlayed, amountOfRatings, averageRating, id, community = []) {
         this._name = name;
         this._description = description;
         this._year = year;
@@ -35,6 +38,8 @@ class Game {
         this._amountOfPlayed = amountOfPlayed;
         this._amountOfRatings = amountOfRatings;
         this._averageRating = averageRating;
+        this._community = community;
+        this._id = id;
     }
 
     get name() {
@@ -79,6 +84,12 @@ class Game {
     get averageRating() {
         return this._averageRating;
     }
+    get id() {
+        return this._id;
+    }
+    get community() {
+        return this._community;
+    }
 
     set name(val) {
          this._name = val;
@@ -121,6 +132,12 @@ class Game {
     }
     set averageRating(val) {
          this._averageRating = val;
+    }
+    set id(val) {
+        this._id = val;
+    }
+    set community(val) {
+        this._community = val;
     }
 }
 
