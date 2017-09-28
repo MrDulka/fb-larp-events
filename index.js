@@ -17,3 +17,7 @@ dataStores.setup().then(databases => {
 }).catch(err => {
   logger.error(`index.js `, err);
 });
+
+process.on('unhandledRejection', (reason, prom) => {
+    logger.error('Unhandled rejection at:', prom, 'reason:', reason);
+});
