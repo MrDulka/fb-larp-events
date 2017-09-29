@@ -7,7 +7,7 @@ const hrajLarpUrl = config.hrajLarpUrl;
 
 const dataStores = new DataStores([sqlURL, hrajLarpUrl]);
 
-const DbSimilarGames = require('./server/scripts/service/DbSImilarGames');
+const DbSimilarGames = require('./server/scripts/service/DbSimilarGames');
 
 // Have only one logger for application.
 const Logger = require('./server/scripts/tools/Logger.js');
