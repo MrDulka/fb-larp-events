@@ -84,9 +84,18 @@ class SqlGames {
             result.rows.forEach(row => {
                 games
                     .filter(game => game.id === row.id_game)
-                    .forEach(game => game.labels.push(row.id_label);
+                    .forEach(game => game.labels.push(row.id_label));
             });
             return games;
+        });
+    }
+
+
+
+    save(game){
+        return game.similar.forEach(similarGame => {
+            return this._pgPool.query(`INSERT INTO public.similar_games (id_game1, id_game2, similarity_coefficient)
+            VALUES (${game.id}, ${similarGame.id}, ${similarGame.rating})`);
         });
     }
 

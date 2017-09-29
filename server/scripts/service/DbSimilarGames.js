@@ -9,23 +9,30 @@ class DbSimilarGames{
     constructor(pgPool, logger){
         this._pgPool = pgPool;
         this._logger = logger;
+        this._sqlGames = new SqlGames(pgPool, logger);
     }
 
     /**
-     *  Just a concept
+     *  load games, calculates similar games and stores them in the database
      */
     load(){
-        let sqlGames = new SqlGames(this._pgPool, this._logger);
-
-        return sqlGames.load().then(games => {
+        this._sqlGames.load().then(games => {
             let similarGames = new SimilarGames(games, this._logger);
-            return similarGames.compareAllToAll();
+            this.save(similarGames.compareAllToAll());
         })
         .catch(err => {
-            this._logger(err); //TODO: finish after naming
+            this._logger(`DbSimilarGames#load Error:`, err);
         });
 
     }
+
+    save(games){
+        games.forEach(game => {
+            this._sqlGames.save(game);
+        });
+    }
+
+
 }
 
 module.exports = DbSimilarGames;

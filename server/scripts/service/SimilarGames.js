@@ -85,11 +85,11 @@ class SimilarGames {
     compareToAll(game1) {
         return this._games.map(game2 => {
             let rating = this.compare(game1, game2);
-            if (game1.name === game2.name) {
+            if (game1.id === game2.id) {
                 rating = -99;
             }
             return {
-                name: game2.name,
+                id: game2.id,
                 rating: rating
             };
         });
