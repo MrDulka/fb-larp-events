@@ -1,8 +1,9 @@
 const DataStores = require('./server/scripts/database/DataStores.js');
 const WebApplication = require('./server/scripts/webapp/WebApplication');
 
-const sqlURL = 'postgresql://csld:csld@10.0.75.2:5432/csld';
-const hrajLarpUrl = 'postgresql://hrajlarp:hrajlarp@10.0.75.2:5432/hrajlarp';
+let config = require('./config');
+const sqlURL = config.sqlUrl;
+const hrajLarpUrl = config.hrajLarpUrl;
 
 const dataStores = new DataStores([sqlURL, hrajLarpUrl]);
 
