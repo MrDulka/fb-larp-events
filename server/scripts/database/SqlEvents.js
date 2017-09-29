@@ -53,9 +53,6 @@ class SqlEvents extends Events {
             this.matchGame(event, result.rows[0].id);
             this.labelEvent(event, result.rows[0].id);
             return;
-        })
-        .catch(err => {
-            this._logger.error(`SqlEvents#save Error:`, err);
         });
     }
 
@@ -70,8 +67,6 @@ class SqlEvents extends Events {
         let selectSql = `SELECT * FROM public.event`;
         return this._pgPool.query(selectSql).then(result => {
             return this.convert(result);
-        }).catch(err => {
-            this._logger.error(`SqlEvents#load Error:`, err);
         });
     }
 
@@ -103,7 +98,7 @@ class SqlEvents extends Events {
     matchGame(event, eventId){
         let findGameSql = `SELECT * FROM public.csld_game WHERE name = '${event.name}'`;
 
-        this._pgPool.query(findGameSql)
+        return this._pgPool.query(findGameSql)
         .then(result => {
             //match if there is only one game with the same name as the event
             if (result.rows.length === 1) {
@@ -111,13 +106,7 @@ class SqlEvents extends Events {
                 let insertSql = `INSERT INTO public.csld_game_has_event (game_id, event_id) VALUES (${gameId}, ${eventId})`;
                 return this._pgPool.query(insertSql);
             }
-            else {
-                return null;
-            }
         })
-        .catch(err =>{
-            this._logger.error(`SqlEvents#matchGame Error: `, err);
-        });
     }
 
     /**
@@ -129,20 +118,19 @@ class SqlEvents extends Events {
         const komorniLabelId = 1;
         let findLabelIdSql = `SELECT * FROM public.csld_label WHERE name = '${event.source}'`;
 
-        this._pgPool.query(findLabelIdSql)
+        return this._pgPool.query(findLabelIdSql)
         .then(result => {
-            let labelId = result.rows[0].id;
-            let insertSql = `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${labelId});`;
+            if(result.rows[0].length === 1) {
+                let labelId = result.rows[0].id;
+                let insertSql = `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${labelId});`;
 
-            if (event.source === 'HrajuLarpy' || event.source === 'HrajLarp'){
-                insertSql += `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${komorniLabelId});`
+                if (event.source === 'HrajuLarpy' || event.source === 'HrajLarp') {
+                    insertSql += `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${komorniLabelId});`
+                }
+
+                return this._pgPool.query(insertSql);
             }
-
-            return this._pgPool.query(insertSql);
         })
-        .catch(err => {
-            this._logger.error(`SqlEvents#label Error: `, err);
-        });
     }
 }
 

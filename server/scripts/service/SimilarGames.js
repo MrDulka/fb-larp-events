@@ -18,44 +18,56 @@ class SimilarGames {
      * @param {Game} game2 - games to compare
      * @return {Number} rating describing the similarity of the games
      */
-    compare(game1, game2){
+    compare(game1, game2) {
         let rating = 0;
 
-        if (game1.year && game2.year){
-            let yearDiff = Math.abs(game1.year-game2.year);
+        if (game1.year && game2.year) {
+            let yearDiff = Math.abs(game1.year - game2.year);
             rating -= yearDiff;
         }
-        if (game1.hours && game2.hours){
-            let diff = Math.abs(game1.hours-game2.hours);
-            if (diff < 2) rating++;
+        if (game1.hours && game2.hours) {
+            let diff = Math.abs(game1.hours - game2.hours);
+            if (diff < 2) {
+                rating++;
+            }
         }
 
-        if (game1.days && game2.days){
-            if (game1.days === game2.days) rating++;
+        if (game1.days && game2.days) {
+            if (game1.days === game2.days) {
+                rating++;
+            }
         }
 
-        if (game1.players && game2.players){
-            let ratio = game1.players/game2.players;
-            if (0.666 < ratio && ratio < 1.5) rating++;
+        if (game1.players && game2.players) {
+            let ratio = game1.players / game2.players;
+            if (0.666 < ratio && ratio < 1.5) {
+                rating++;
+            }
         }
 
-        if (game1.menRole && game2.menRole){
-            let ratio = game1.menRole/game2.menRole;
-            if (0.666 < ratio && ratio < 1.5) rating++;
+        if (game1.menRole && game2.menRole) {
+            let ratio = game1.menRole / game2.menRole;
+            if (0.666 < ratio && ratio < 1.5) {
+                rating += 0.5;
+            }
         }
 
-        if (game1.womenRole && game2.womenRole){
-            let ratio = game1.womenRole/game2.womenRole;
-            if (0.666 < ratio && ratio < 1.5) rating++;
+        if (game1.womenRole && game2.womenRole) {
+            let ratio = game1.womenRole / game2.womenRole;
+            if (0.666 < ratio && ratio < 1.5) {
+                rating += 0.5;
+            }
         }
 
-        if (game1.averageRating && game2.averageRating){
-            let diff = Math.abs(game1.averageRating-game2.averageRating);
-            if (diff < 10) rating++;
+        if (game1.averageRating && game2.averageRating) {
+            let diff = Math.abs(game1.averageRating - game2.averageRating);
+            if (diff < 10) {
+                rating++;
+            }
         }
 
         let sharedCommunity = _.intersection(game1.community, game2.community).length;
-        rating += Math.log(sharedCommunity+1);
+        rating += Math.log(sharedCommunity + 1);
 
         let sharedLabels = _.intersection(game1.labels, game2.labels).length;
         rating += sharedLabels;
@@ -70,10 +82,10 @@ class SimilarGames {
      * @return {Object[]} array of object with two properties - name and similarityRating
      *
      */
-    compareToAll(game1){
+    compareToAll(game1) {
         return this._games.map(game2 => {
             let rating = this.compare(game1, game2);
-            if (game1.name === game2.name){
+            if (game1.name === game2.name) {
                 rating = -99;
             }
             return {
@@ -88,7 +100,7 @@ class SimilarGames {
      * @return {Game[]} - returns array of games with added array of 5 most similar games in their
      * "similar" property
      */
-    compareAllToAll () {
+    compareAllToAll() {
         return this._games.map(game => {
             let ratings = this.compareToAll(game).sort((a, b) => {
                 return b.rating - a.rating;

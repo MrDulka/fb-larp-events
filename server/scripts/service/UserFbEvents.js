@@ -9,12 +9,11 @@ class UserFbEvents {
 
     /**
      * initiate FbEvents with keywords from the database
-     * @return instance of FbEvents
+     * @return {FbEvents} instance of FbEvents
      */
     initiateFbEvents(){
         let dbFbKeywords = new DbFbKeywords(this._pgPool, this._logger);
-        let promisedQueries = dbFbKeywords.load();
-        return new FbEvents (promisedQueries, this._logger);
+        return new FbEvents (dbFbKeywords.load(), this._logger);
     }
 }
 

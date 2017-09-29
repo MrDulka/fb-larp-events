@@ -5,7 +5,7 @@ const SimilarGames = require('./SimilarGames');
  * not sure how to name this class
  * Class provides communication between SqlGames and SimilarGames
  */
-class MasterGames{
+class DbSimilarGames{
     constructor(pgPool, logger){
         this._pgPool = pgPool;
         this._logger = logger;
@@ -28,4 +28,4 @@ class MasterGames{
     }
 }
 
-module.exports = MasterGames;
+module.exports = DbSimilarGames;

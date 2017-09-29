@@ -31,9 +31,6 @@ class SqlGames {
         })
         .then(games => {
             return this.getLabels(games);
-        })
-        .catch(err =>{
-          this._logger.error(`SqlGames#load Error: `, err);
         });
     }
 
@@ -47,7 +44,7 @@ class SqlGames {
             return new Game(game.name, game.description, game.year, game.web, game.hours,
             game.days, game.players, game.men_role, game.women_role, game.both_role,
             game.amount_of_comments, game.amount_of_played, game.amount_of_ratings,
-            game.average_rating, game.id, [], []);
+            game.average_rating, game.id);
         });
     }
 
@@ -62,25 +59,22 @@ class SqlGames {
 
         return this._pgPool.query(`SELECT * FROM public.csld_user_played_game`)
         .then(result => {
-            result.rows.forEach(row => {
-                if (row.state !== 1 && row.state !== 2) return;
-                let index = games.findIndex(game => {
-                    return game.id === row.game_id;
-                });
-                games[index].community.push(row.user_id);
+            result.rows
+                .filter(row => row.state !== 1 && row.state !== 2)
+                .forEach(row => {
+                    games
+                        .filter(game => game.id === row.game_id)
+                        .forEach(game => game.community.push(row.user_id));
             });
             return games;
-        })
-        .catch(err => {
-            this._logger.error(`SqlGames#getCommunity Error: `, err);
         });
     }
 
     /**
      * finds labels assosiated with the game and adds them to game's labels
-     * @param {Games[]}
-     * @return {Promise|Games[]} - promise resolves with array of games with added values in their
-     * labels property
+     * @param {Game[]} games Array of games to search labels for
+     * @return {Promise|Game[]} - promise resolves with array of games with added values in their
+     *   labels property
      */
     getLabels(games){
         this._logger.info("SqlGames#getLabels");
@@ -88,15 +82,11 @@ class SqlGames {
         return this._pgPool.query(`SELECT * FROM public.csld_game_has_label`)
         .then(result => {
             result.rows.forEach(row => {
-                let index = games.findIndex(game => {
-                    return game.id === row.id_game;
-                });
-                games[index].labels.push(row.id_label);
+                games
+                    .filter(game => game.id === row.id_game)
+                    .forEach(game => game.labels.push(row.id_label);
             });
             return games;
-        })
-        .catch(err => {
-            this._logger.error(`SqlGames#getLabels Error: `, err);
         });
     }
 

@@ -19,10 +19,10 @@ class Game {
      * @param {Number} amountOfRatings
      * @param {Number} averageRating
      * @param {Number} id - game id in the database
-     * @param {Number[]} community - array of UserIds of players that played or wish
+     * @param {Number[]} community - array of UserIds of players that played or wish Optional
      * to play this game in the future
-     * @param {Number[]} labels - array of labelIds of labels assosiated with this game
-     * @param {Object[]} similar - array of similar games
+     * @param {Number[]} labels - array of labelIds of labels assosiated with this game Optional
+     * @param {Object[]} similar - array of similar games Optional
      */
     constructor(name, description, year, web, hours, days, players, menRole, womenRole, bothRole,
         amountOfComments, amountOfPlayed, amountOfRatings, averageRating, id, community = [], labels = [], similar = []) {

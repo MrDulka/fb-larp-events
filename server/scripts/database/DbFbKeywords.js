@@ -22,8 +22,6 @@ class DbFbKeywords {
                   type: item.type
                 }
             });
-        }).catch(err => {
-            this._logger.error(`DbFbKeywords#load Error: `, err);
         });
     }
 }
