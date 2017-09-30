@@ -22,7 +22,7 @@ class SqlGames {
     load(){
         this._logger.info("SqlGames#load");
 
-        return this._pgPool.query(`SELECT * FROM public.csld_game`)
+        return this._pgPool.query(`SELECT * FROM public.csld_game WHERE deleted <> true`)
         .then(result => {
             return this.convert(result);
         })
