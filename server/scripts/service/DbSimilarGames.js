@@ -20,7 +20,7 @@ class DbSimilarGames{
 
         this._sqlGames.load().then(games => {
             let similarGames = new SimilarGames(games, this._logger);
-            this.save(similarGames.compareAllToAll());
+            return this.save(similarGames.compareAllToAll());
         })
         .catch(err => {
             this._logger.error(`DbSimilarGames#load Error:`, err);
@@ -30,13 +30,8 @@ class DbSimilarGames{
 
     save(games){
         this._logger.info(`DbSimilarGames#save`);
-
-        games.forEach(game => {
-            this._sqlGames.save(game);
-        });
+        return this._sqlGames.save(games);
     }
-
-
 }
 
 module.exports = DbSimilarGames;
