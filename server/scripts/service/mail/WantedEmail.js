@@ -1,4 +1,5 @@
 let nodemailer = require('nodemailer');
+let removeDiacritics = require('diacritics').remove;
 
 /**
  * It sends an email based on the wanted information to the author of the game.
@@ -9,7 +10,7 @@ let nodemailer = require('nodemailer');
  *   // Pseudo code follows
  *   for(event in wanted) {
  *      for(user in thoseWhoWants) {
- *          email.send(user.email, event.name, event.id);  // Promise is returned. It is possible to combine the promises and return them to the callee.
+ *          email.send(user.email, event.game.name, event.name, event.id);  // Promise is returned. It is possible to combine the promises and return them to the callee.
  *      }
  *   }
  */
@@ -38,11 +39,14 @@ class WantedEmail {
      * It sends email about new wanted game to the user. To work it needs to provide the email
      * @param email {String} Email of the user who is receiving the notification
      * @param name {String} Name of the game, which event was added.
-     * @param gameId {Integer} Id of the game used for creation of the URL.
+     * @param eventName {String} Name of the event, to show.
+     * @param eventId {Integer} Id of the event used for creation of the URL.
      * @returns {Promise}
      */
-    send(email, name, gameId) {
-        let content = `Byla přidána událost, která se váže ke hře ${name}, kterou máte nastavenou jako chci hrát. Odkaz: https://larpovadatabaze.cz/event//${gameId}`;
+    send(email, name, eventName, eventId) {
+        let validName = eventName.toLowerCase().replace(/[^a-z0-9\\.]/g, "-").replace(/-+/g, "-").replace(/-$/g, "");
+        let validNameWithoutAccents = removeDiacritics(validName);
+        let content = `Byla přidána událost, která se váže ke hře ${name}, kterou máte nastavenou jako chci hrát. Odkaz: https://larpovadatabaze.cz/event/${validNameWithoutAccents}/${eventId}`;
         let subject = `Do kalendáře byla přidána událost ke hře, která vás zajímá.`;
 
         let mailOptions = {
