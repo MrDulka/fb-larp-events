@@ -2,6 +2,16 @@ let nodemailer = require('nodemailer');
 
 /**
  * It sends an email based on the wanted information to the author of the game.
+ * Usage:
+ *   let config = require('./config') // Path to config will differ. This is if it was instantiated in index.js
+ *   let email = new WantedEmail(config.email); // Create new instance, ready to send emails.
+ *
+ *   // Pseudo code follows
+ *   for(event in wanted) {
+ *      for(user in thoseWhoWants) {
+ *          email.send(user.email, event.name, event.id);  // Promise is returned. It is possible to combine the promises and return them to the callee.
+ *      }
+ *   }
  */
 class WantedEmail {
     /**
