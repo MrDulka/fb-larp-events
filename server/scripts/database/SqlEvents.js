@@ -11,7 +11,7 @@ class SqlEvents extends Events {
     /**
      * Create SqlEvents
      * @param {Object} pgPool - represents sql connection pool
-     * @param logger
+     * @param logger - logger for logging
      */
     constructor(pgPool, logger) {
         super();

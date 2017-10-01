@@ -1,5 +1,7 @@
 const SqlGames = require('../database/SqlGames');
 const SimilarGames = require('./SimilarGames');
+const SqlGameUser = require('../database/SqlGameUser');
+const SqlGameLabel = require('../database/SqlGameLabel');
 
 /**
  * Class representing similar games in the database
@@ -9,7 +11,10 @@ class DbSimilarGames{
     constructor(pgPool, logger){
         this._pgPool = pgPool;
         this._logger = logger;
-        this._sqlGames = new SqlGames(pgPool, logger);
+
+        const sqlGameUser = new SqlGameUser(pgPool, logger);
+        const sqlGameLabel = new SqlGameLabel(pgPool, logger);
+        this._sqlGames = new SqlGames(pgPool, logger, sqlGameUser, sqlGameLabel);
     }
 
     /**
@@ -28,6 +33,10 @@ class DbSimilarGames{
 
     }
 
+    /**
+     * save games into the database
+     * @param {Game[]} games - array of games to be saved
+     */
     save(games){
         this._logger.info(`DbSimilarGames#save`);
         return this._sqlGames.save(games);

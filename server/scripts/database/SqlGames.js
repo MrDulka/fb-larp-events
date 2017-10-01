@@ -10,9 +10,11 @@ class SqlGames {
      * @param {Object} pgPool - represents sql connection pool
      * @param logger
      */
-    constructor(pgPool, logger){
+    constructor(pgPool, logger, sqlGameUser, sqlGameLabel){
         this._pgPool = pgPool;
         this._logger = logger;
+        this._sqlGameUser = sqlGameUser;
+        this._sqlGameLabel = sqlGameLabel;
     }
 
     /**
@@ -27,10 +29,10 @@ class SqlGames {
             return this.convert(result);
         })
         .then(games => {
-            return this.getCommunity(games);
+            return this._sqlGameUser.getCommunity(games);
         })
         .then(games => {
-            return this.getLabels(games);
+            return this._sqlGameLabel.getLabels(games);
         });
     }
 
@@ -45,48 +47,6 @@ class SqlGames {
             game.days, game.players, game.men_role, game.women_role, game.both_role,
             game.amount_of_comments, game.amount_of_played, game.amount_of_ratings,
             game.average_rating, game.id);
-        });
-    }
-
-    /**
-     * finds players that played or would like to play the game and adds them to game's "community"
-     * @param {Games[]}
-     * @return {Promise|Games[]} - promise resolves with array of games with added values in their
-     * community property
-     */
-    getCommunity(games){
-        this._logger.info("SqlGames#getCommunity");
-
-        return this._pgPool.query(`SELECT * FROM public.csld_user_played_game`)
-        .then(result => {
-            result.rows
-                .filter(row => row.state !== 1 && row.state !== 2)
-                .forEach(row => {
-                    games
-                        .filter(game => game.id === row.game_id)
-                        .forEach(game => game.community.push(row.user_id));
-            });
-            return games;
-        });
-    }
-
-    /**
-     * finds labels assosiated with the game and adds them to game's labels
-     * @param {Game[]} games Array of games to search labels for
-     * @return {Promise|Game[]} - promise resolves with array of games with added values in their
-     *   labels property
-     */
-    getLabels(games){
-        this._logger.info("SqlGames#getLabels");
-
-        return this._pgPool.query(`SELECT * FROM public.csld_game_has_label`)
-        .then(result => {
-            result.rows.forEach(row => {
-                games
-                    .filter(game => game.id === row.id_game)
-                    .forEach(game => game.labels.push(row.id_label));
-            });
-            return games;
         });
     }
 

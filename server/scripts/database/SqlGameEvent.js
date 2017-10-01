@@ -1,9 +1,14 @@
 /**
- * This class corresponds to the event_has_labels table in the database
+ * This class corresponds to the csld_game_has_event table in the database
  */
 
 class SqlGameEvent {
 
+  /**
+   * Create SqlGameEvent
+   * @param {Object} pgPool - represents sql connection pool
+   * @param logger - logger for logging
+   */
     constructor(pgPool, logger){
         this._pgPool = pgPool;
         this._logger = logger;
