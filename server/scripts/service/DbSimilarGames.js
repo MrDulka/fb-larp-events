@@ -2,8 +2,8 @@ const SqlGames = require('../database/SqlGames');
 const SimilarGames = require('./SimilarGames');
 
 /**
- * not sure how to name this class
- * Class provides communication between SqlGames and SimilarGames
+ * Class representing similar games in the database
+ * provides communication between SqlGames and SimilarGames
  */
 class DbSimilarGames{
     constructor(pgPool, logger){

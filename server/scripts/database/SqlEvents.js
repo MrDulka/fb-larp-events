@@ -1,10 +1,11 @@
-const Event = require('./Event.js');
+const Event = require('./Event');
 const Events = require('../service/Events');
+const SqlEventLabel = require('./SqlEventLabel');
+const SqlGameEvent = require('./SqlGameEvent');
 
 /**
  * This class represents Events in the postgreSQL database.
  */
-
 class SqlEvents extends Events {
 
     /**
@@ -17,6 +18,9 @@ class SqlEvents extends Events {
 
         this._pgPool = pgPool;
         this._logger = logger;
+
+        this._sqlEventLabel = new SqlEventLabel(pgPool, logger);
+        this._sqlGameEvent = new SqlGameEvent(pgPool, logger);
     }
 
     /**
@@ -50,8 +54,8 @@ class SqlEvents extends Events {
         .then(result => {
             if (!result) return;
 
-            this.matchGame(event, result.rows[0].id);
-            this.labelEvent(event, result.rows[0].id);
+            this._sqlGameEvent.matchGameEvent(event, result.rows[0].id);
+            this._sqlEventLabel.labelEvent(event, result.rows[0].id);
             return;
         });
     }
@@ -90,48 +94,6 @@ class SqlEvents extends Events {
         });
     }
 
-    /**
-     * Matches events with games in the database
-     * @param {Event} event
-     * @param {number} eventId - id of the event that was just inserted into the database
-     */
-    matchGame(event, eventId){
-        let findGameSql = `SELECT * FROM public.csld_game WHERE name = '${event.name}'`;
-
-        return this._pgPool.query(findGameSql)
-        .then(result => {
-            //match if there is only one game with the same name as the event
-            if (result.rows.length === 1) {
-                let gameId = result.rows[0].id;
-                let insertSql = `INSERT INTO public.csld_game_has_event (game_id, event_id) VALUES (${gameId}, ${eventId})`;
-                return this._pgPool.query(insertSql);
-            }
-        })
-    }
-
-    /**
-     * Labels the event through table event_has_lables
-     * @param {Event} event
-     * @param {number} eventId - id of the event that was just inserted into the database
-     */
-    labelEvent(event, eventId){
-        const komorniLabelId = 1;
-        let findLabelIdSql = `SELECT * FROM public.csld_label WHERE name = '${event.source}'`;
-
-        return this._pgPool.query(findLabelIdSql)
-        .then(result => {
-            if(result.rows[0].length === 1) {
-                let labelId = result.rows[0].id;
-                let insertSql = `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${labelId});`;
-
-                if (event.source === 'HrajuLarpy' || event.source === 'HrajLarp') {
-                    insertSql += `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${komorniLabelId});`
-                }
-
-                return this._pgPool.query(insertSql);
-            }
-        })
-    }
 }
 
 module.exports = SqlEvents;
