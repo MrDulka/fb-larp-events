@@ -20,17 +20,31 @@ class SqlGameEvent {
      * @param {number} eventId - id of the event that was just inserted into the database
      */
     matchGameEvent(event, eventId){
+        return this.findGame(event)
+        .then(gameId => {
+            if(!gameId){
+                return;
+            }
+            let insertSql = `INSERT INTO public.csld_game_has_event (game_id, event_id) VALUES (${gameId}, ${eventId})`;
+            return this._pgPool.query(insertSql);
+        });
+    }
+
+    /**
+     * Find a game matching with the provided event
+     * @param {Event} event - event that we want matched
+     * @return {Proise|Number} promise that resolves with id of the game that matches with passed in event
+     */
+    findGame(event){
         let findGameSql = `SELECT * FROM public.csld_game WHERE name = '${event.name}'`;
 
         return this._pgPool.query(findGameSql)
         .then(result => {
-            //match if there is only one game with the same name as the event
-            if (result.rows.length === 1) {
-                let gameId = result.rows[0].id;
-                let insertSql = `INSERT INTO public.csld_game_has_event (game_id, event_id) VALUES (${gameId}, ${eventId})`;
-                return this._pgPool.query(insertSql);
+            if (result.rows.length === 1){
+                return result.rows[0].id;
             }
-        })
+            return;
+        });
     }
 }
 

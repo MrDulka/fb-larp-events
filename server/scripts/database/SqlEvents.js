@@ -26,7 +26,9 @@ class SqlEvents extends Events {
      * @param {Event} event - Event to be stored in the database
      */
     save(event) {
-        if (!event) return;
+        if (!event) {
+          return;
+        }
 
         this._logger.info(`SqlEvents#save Event: `, event);
 
@@ -41,22 +43,27 @@ class SqlEvents extends Events {
         let values = [event.name, event.description, event.location.name, event.source, event.date.start_date, event.date.end_date,
             event.location.latitude, event.location.longitude, web, 1, event.amountOfPlayers, event.language];
 
-        this._pgPool.query(selectSql)
-        .then(result => {
-            if (result.rows.length > 0) {
-                return null;
-            } else {
-                return this._pgPool.query(insertSql, values);
-            }
-        })
-        .then(result => {
-            if (!result) {
-              return;
-            }
-            this._sqlGameEvent.matchGameEvent(event, result.rows[0].id);
-            this._sqlEventLabel.labelEvent(event, result.rows[0].id);
-            return;
+        return new Promise((resolve, reject) => {
+            this._pgPool.query(selectSql)
+            .then(result => {
+                if (result.rows.length > 0) {
+                    resolve(null);
+                } else {
+                    resolve(event);
+                    return this._pgPool.query(insertSql, values);
+                }
+            })
+            .then(result => {
+                if (!result) {
+                    return;
+                }
+                else {
+                    this._sqlGameEvent.matchGameEvent(event, result.rows[0].id);
+                    this._sqlEventLabel.labelEvent(event, result.rows[0].id);
+                }
+            });
         });
+
     }
 
 
