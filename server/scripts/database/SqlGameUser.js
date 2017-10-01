@@ -26,7 +26,7 @@
        return this._pgPool.query(`SELECT * FROM public.csld_user_played_game`)
        .then(result => {
            result.rows
-               .filter(row => row.state !== 1 && row.state !== 2)
+               .filter(row => row.state === 1 || row.state === 2)
                .forEach(row => {
                    games
                        .filter(game => game.id === row.game_id)
