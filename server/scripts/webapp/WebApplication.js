@@ -2,7 +2,7 @@ const express = require('express');
 const fs = require('fs');
 const app = express();
 
-const SqlEvents = require('../database/SqlEvents.js');
+const DbEvents = require('../service/DbEvents.js');
 const UserFbEvents = require('../service/UserFbEvents.js');
 const HrajLarpEvents = require('../service/HrajLarpEvents');
 const HrajuLarpyEvents = require('../service/HrajuLarpyEvents');
@@ -25,16 +25,13 @@ class WebApplication {
     }
 
     /**
-     * setup the application
-     * initiate mongoEvents and sqlEvents for interacting with the databases,
-     * scheduledEvents for regularly getting the events from facebook
-     * controller for managing user requests
+     * Setup the application
      */
     setup() {
-        const sqlEvents = new SqlEvents(this._pgPool, this._logger);
-        this.schedule(sqlEvents);
+        const dbEvents = new DbEvents(this._pgPool, this._logger);
+        this.schedule(dbEvents);
 
-        new EventsController(app, sqlEvents);
+        new EventsController(app, dbEvents);
 
         app.listen(process.env.PORT || 5000);
         this.clientside();

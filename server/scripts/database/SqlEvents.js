@@ -1,7 +1,5 @@
 const Event = require('./Event');
 const Events = require('../service/Events');
-const SqlEventLabel = require('./SqlEventLabel');
-const SqlGameEvent = require('./SqlGameEvent');
 
 /**
  * This class represents Events in the postgreSQL database.
@@ -13,14 +11,14 @@ class SqlEvents extends Events {
      * @param {Object} pgPool - represents sql connection pool
      * @param logger - logger for logging
      */
-    constructor(pgPool, logger) {
+    constructor(pgPool, logger, sqlEventLabel, sqlGameEvent) {
         super();
 
         this._pgPool = pgPool;
         this._logger = logger;
 
-        this._sqlEventLabel = new SqlEventLabel(pgPool, logger);
-        this._sqlGameEvent = new SqlGameEvent(pgPool, logger);
+        this._sqlEventLabel = sqlEventLabel;
+        this._sqlGameEvent = sqlGameEvent;
     }
 
     /**
@@ -52,8 +50,9 @@ class SqlEvents extends Events {
             }
         })
         .then(result => {
-            if (!result) return;
-
+            if (!result) {
+              return;
+            }
             this._sqlGameEvent.matchGameEvent(event, result.rows[0].id);
             this._sqlEventLabel.labelEvent(event, result.rows[0].id);
             return;
