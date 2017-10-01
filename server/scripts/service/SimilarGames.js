@@ -72,6 +72,9 @@ class SimilarGames {
         let sharedLabels = _.intersection(game1.labels, game2.labels).length;
         rating += sharedLabels;
 
+        let sharedAuthors = _.intersection(game1.authors, game2.authors).length;
+        rating += sharedAuthors/2;
+
         return rating;
     }
 

@@ -2,6 +2,7 @@ const SqlGames = require('../database/SqlGames');
 const SimilarGames = require('./SimilarGames');
 const SqlGameUser = require('../database/SqlGameUser');
 const SqlGameLabel = require('../database/SqlGameLabel');
+const SqlGameAuthor = require('../database/SqlGameAuthor');
 
 /**
  * Class representing similar games in the database
@@ -14,7 +15,8 @@ class DbSimilarGames{
 
         const sqlGameUser = new SqlGameUser(pgPool, logger);
         const sqlGameLabel = new SqlGameLabel(pgPool, logger);
-        this._sqlGames = new SqlGames(pgPool, logger, sqlGameUser, sqlGameLabel);
+        const sqlGameAuthor = new SqlGameAuthor(pgPool, logger);
+        this._sqlGames = new SqlGames(pgPool, logger, sqlGameUser, sqlGameLabel, sqlGameAuthor);
     }
 
     /**

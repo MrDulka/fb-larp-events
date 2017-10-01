@@ -22,10 +22,11 @@ class Game {
      * @param {Number[]} community - array of UserIds of players that played or wish Optional
      * to play this game in the future
      * @param {Number[]} labels - array of labelIds of labels assosiated with this game Optional
+     * @param {Number[]} authors - array of UserIds of authors of the game Optional
      * @param {Object[]} similar - array of similar games Optional
      */
     constructor(name, description, year, web, hours, days, players, menRole, womenRole, bothRole,
-        amountOfComments, amountOfPlayed, amountOfRatings, averageRating, id, community = [], labels = [], similar = []) {
+        amountOfComments, amountOfPlayed, amountOfRatings, averageRating, id, community = [], labels = [], authors = [], similar = []) {
         this._name = name;
         this._description = description;
         this._year = year;
@@ -43,6 +44,7 @@ class Game {
         this._id = id;
         this._community = community;
         this._labels = labels;
+        this._authors = authors;
         this._similar = similar;
     }
 
@@ -96,6 +98,9 @@ class Game {
     }
     get labels() {
         return this._labels;
+    }
+    get authors(){
+        return this._authors;
     }
     get similar(){
         return this._similar;
@@ -152,6 +157,9 @@ class Game {
     }
     set labels(val) {
         this._labels = val;
+    }
+    set authors(val) {
+        this.authors = val;
     }
     set similar(val) {
         this._similar = val;
