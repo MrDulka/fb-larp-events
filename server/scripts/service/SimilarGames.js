@@ -84,8 +84,12 @@ class SimilarGames {
             }
         }
 
-        let sharedCommunity = _.intersection(game1.community, game2.community).length;
-        rating += Math.log(sharedCommunity + 1);
+        let shared = _.intersection(game1.community, game2.community).length;
+        let total = _.union(game1.community, game2.community).length;
+        if (total != 0) {
+            let communityRatio = shared/total;
+            rating += communityRatio*5;
+        }
 
         let sharedLabels = _.intersection(game1.labels, game2.labels).length;
         rating += sharedLabels;
