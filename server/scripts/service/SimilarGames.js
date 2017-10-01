@@ -22,9 +22,15 @@ class SimilarGames {
         let rating = 0;
 
         if (game1.year && game2.year) {
-            let yearDiff = Math.abs(game1.year - game2.year);
-            rating -= yearDiff;
+            let diff = Math.abs(game1.year - game2.year);
+            if (diff <= 2){
+                rating += 2;
+            }
+            else if (diff <= 5){
+                rating++;
+            }
         }
+
         if (game1.hours && game2.hours) {
             let diff = Math.abs(game1.hours - game2.hours);
             if (diff < 2) {
@@ -45,23 +51,35 @@ class SimilarGames {
             }
         }
 
-        if (game1.menRole && game2.menRole) {
-            let ratio = game1.menRole / game2.menRole;
-            if (0.666 < ratio && ratio < 1.5) {
-                rating += 0.5;
+        //compares number of roles for specific gender with all the roles
+        let totalRoles1 = game1.menRole + game1.womenRole + game1.bothRole;
+        let totalRoles2 = game2.menRole + game2.womenRole + game2.bothRole;
+        if (totalRoles1 && totalRoles2){
+            let menRatio1 = game1.menRole/totalRoles1;
+            let menRatio2 = game2.menRole/totalRoles2;
+            let menDiff = Math.abs(menRatio1 - menRatio2);
+            if(menDiff < 0.1) {
+                rating+=0.5;
             }
-        }
 
-        if (game1.womenRole && game2.womenRole) {
-            let ratio = game1.womenRole / game2.womenRole;
-            if (0.666 < ratio && ratio < 1.5) {
-                rating += 0.5;
+            let womenRatio1 = game1.womenRole/totalRoles1;
+            let womenRatio2 = game2.womenRole/totalRoles2;
+            let womenDiff = Math.abs(womenRatio1 - womenRatio2);
+            if(womenDiff < 0.1) {
+                rating+=0.5;
+            }
+
+            let bothRatio1 = game1.bothRole/totalRoles1;
+            let bothRatio2 = game2.bothRole/totalRoles2;
+            let bothDiff = Math.abs(bothRatio1 - bothRatio2);
+            if(bothDiff < 0.1) {
+                rating+=0.5;
             }
         }
 
         if (game1.averageRating && game2.averageRating) {
             let diff = Math.abs(game1.averageRating - game2.averageRating);
-            if (diff < 10) {
+            if (diff < 8) {
                 rating++;
             }
         }
@@ -73,7 +91,9 @@ class SimilarGames {
         rating += sharedLabels;
 
         let sharedAuthors = _.intersection(game1.authors, game2.authors).length;
-        rating += sharedAuthors/2;
+        if (sharedAuthors > 0) {
+            rating++;
+        }
 
         return rating;
     }
