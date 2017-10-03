@@ -44,9 +44,9 @@ class WantedEmail {
      * @returns {Promise}
      */
     send(email, name, eventName, eventId) {
-        let validName = eventName.toLowerCase().replace(/[^a-z0-9\\.]/g, "-").replace(/-+/g, "-").replace(/-$/g, "");
-        let validNameWithoutAccents = removeDiacritics(validName);
-        let content = `Byla přidána událost, která se váže ke hře ${name}, kterou máte nastavenou jako chci hrát. Odkaz: https://larpovadatabaze.cz/event/${validNameWithoutAccents}/${eventId}`;
+        let nameWithoutAccents = removeDiacritics(eventName);
+        let validName = nameWithoutAccents.toLowerCase().replace(/[^a-z0-9\\.]/g, "-").replace(/-+/g, "-").replace(/-$/g, "");
+        let content = `Byla přidána událost, která se váže ke hře ${name}, kterou máte nastavenou jako chci hrát. Odkaz: https://larpovadatabaze.cz/event/${validName}/${eventId}`;
         let subject = `Do kalendáře byla přidána událost ke hře, která vás zajímá.`;
 
         let mailOptions = {
