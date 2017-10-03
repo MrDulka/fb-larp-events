@@ -5,6 +5,7 @@ const SqlGameEvent = require('../database/SqlGameEvent');
 const SqlGameUser = require('../database/SqlGameUser');
 const SqlUsers = require('../database/SqlUsers');
 const WantedEmail = require('./mail/WantedEmail');
+const config = require('../../../config');
 
 /**
  * Class stores events in the database
@@ -27,8 +28,12 @@ class DbEvents extends Events{
     }
 
     /**
-     * @inheritDoc
-     * also if the
+     * Save an event
+     * if the event is really saved and not already in the database, fing a matching
+     * game to the event, if there are people that want to play to game and send an email
+     * notification to those players
+     * @param {Event} event to be savedEvent
+     * @return {}
      */
     save(event){
         return this._sqlEvents.save(event)

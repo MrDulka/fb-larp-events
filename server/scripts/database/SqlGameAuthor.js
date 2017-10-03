@@ -28,7 +28,7 @@
            result.rows.forEach(row => {
                games
                    .filter(game => game.id === row.id_game)
-                   .forEach(game => game.labels.push(row.id_user));
+                   .forEach(game => game.authors.push(row.id_user));
            });
            return games;
        });
