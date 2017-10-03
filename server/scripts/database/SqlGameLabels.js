@@ -2,10 +2,10 @@
  *  This class corresponds to the csld_game_has_label in the database
  */
 
- class SqlGameLabel{
+ class SqlGameLabels{
 
    /**
-    * Create SqlGameLabel
+    * Create SqlGameLabels
     * @param {Object} pgPool - represents sql connection pool
     * @param logger - logger for logging
     */
@@ -21,7 +21,7 @@
     *   labels property
     */
    getLabels(games){
-       this._logger.info("SqlGameLabel#getLabels");
+       this._logger.info("SqlGameLabels#getLabels");
 
        return this._pgPool.query(`SELECT * FROM public.csld_game_has_label`)
        .then(result => {
@@ -36,4 +36,4 @@
 
 }
 
-module.exports = SqlGameLabel;
+module.exports = SqlGameLabels;

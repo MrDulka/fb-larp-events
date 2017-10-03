@@ -2,10 +2,10 @@
  *  This class corresponds to the csld_user_played_game in the database
  */
 
-class SqlGameUser{
+class SqlGameUsers{
 
     /**
-    * Create SqlGameUser
+    * Create SqlGameUsers
     * @param {Object} pgPool - represents sql connection pool
     * @param logger - logger for logging
     */
@@ -21,7 +21,7 @@ class SqlGameUser{
     * community property
     */
     getCommunity(games){
-       this._logger.info("SqlGameUser#getCommunity");
+       this._logger.info("SqlGameUsers#getCommunity");
 
        return this._pgPool.query(`SELECT * FROM public.csld_user_played_game`)
        .then(result => {
@@ -52,4 +52,4 @@ class SqlGameUser{
     }
 }
 
-module.exports = SqlGameUser;
+module.exports = SqlGameUsers;

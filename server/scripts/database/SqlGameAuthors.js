@@ -2,10 +2,10 @@
  *  This class corresponds to csld_game_has_author in the database
  */
 
- class SqlGameAuthor{
+ class SqlGameAuthors{
 
    /**
-    * Create SqlGameAuthor
+    * Create SqlGameAuthors
     * @param {Object} pgPool - represents sql connection pool
     * @param logger - logger for logging
     */
@@ -21,7 +21,7 @@
     *   authors property
     */
    getAuthors(games){
-       this._logger.info("SqlGameAuthor#getAuthors");
+       this._logger.info("SqlGameAuthors#getAuthors");
 
        return this._pgPool.query(`SELECT * FROM public.csld_game_has_author`)
        .then(result => {
@@ -36,4 +36,4 @@
 
 }
 
-module.exports = SqlGameAuthor;
+module.exports = SqlGameAuthors;

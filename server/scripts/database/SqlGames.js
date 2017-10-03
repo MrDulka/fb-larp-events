@@ -10,12 +10,12 @@ class SqlGames {
      * @param {Object} pgPool - represents sql connection pool
      * @param logger
      */
-    constructor(pgPool, logger, sqlGameUser, sqlGameLabel, sqlGameAuthor){
+    constructor(pgPool, logger, sqlGameUsers, sqlGameLabels, sqlGameAuthors){
         this._pgPool = pgPool;
         this._logger = logger;
-        this._sqlGameUser = sqlGameUser;
-        this._sqlGameLabel = sqlGameLabel;
-        this._sqlGameAuthor = sqlGameAuthor;
+        this._sqlGameUsers = sqlGameUsers;
+        this._sqlGameLabels = sqlGameLabels;
+        this._sqlGameAuthors = sqlGameAuthors;
     }
 
     /**
@@ -30,13 +30,13 @@ class SqlGames {
             return this.convert(result);
         })
         .then(games => {
-            return this._sqlGameUser.getCommunity(games);
+            return this._sqlGameUsers.getCommunity(games);
         })
         .then(games => {
-            return this._sqlGameLabel.getLabels(games);
+            return this._sqlGameLabels.getLabels(games);
         })
         .then(games => {
-            return this._sqlGameAuthor.getAuthors(games);
+            return this._sqlGameAuthors.getAuthors(games);
         });
     }
 

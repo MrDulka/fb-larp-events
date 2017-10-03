@@ -1,8 +1,8 @@
 const SqlGames = require('../database/SqlGames');
 const SimilarGames = require('./SimilarGames');
-const SqlGameUser = require('../database/SqlGameUser');
-const SqlGameLabel = require('../database/SqlGameLabel');
-const SqlGameAuthor = require('../database/SqlGameAuthor');
+const SqlGameUsers = require('../database/SqlGameUsers');
+const SqlGameLabels = require('../database/SqlGameLabels');
+const SqlGameAuthors = require('../database/SqlGameAuthors');
 const SqlSimilarGames = require('../database/SqlSimilarGames');
 
 /**
@@ -14,10 +14,10 @@ class DbSimilarGames{
         this._pgPool = pgPool;
         this._logger = logger;
 
-        const sqlGameUser = new SqlGameUser(pgPool, logger);
-        const sqlGameLabel = new SqlGameLabel(pgPool, logger);
-        const sqlGameAuthor = new SqlGameAuthor(pgPool, logger);
-        this._sqlGames = new SqlGames(pgPool, logger, sqlGameUser, sqlGameLabel, sqlGameAuthor);
+        const sqlGameUsers = new SqlGameUsers(pgPool, logger);
+        const sqlGameLabels = new SqlGameLabels(pgPool, logger);
+        const sqlGameAuthors = new SqlGameAuthors(pgPool, logger);
+        this._sqlGames = new SqlGames(pgPool, logger, sqlGameUsers, sqlGameLabels, sqlGameAuthors);
         this._sqlSimilarGames = new SqlSimilarGames(pgPool, logger);
     }
 

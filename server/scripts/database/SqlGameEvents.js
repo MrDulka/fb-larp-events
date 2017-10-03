@@ -2,10 +2,10 @@
  * This class corresponds to the csld_game_has_event table in the database
  */
 
-class SqlGameEvent {
+class SqlGameEvents {
 
   /**
-   * Create SqlGameEvent
+   * Create SqlGameEvents
    * @param {Object} pgPool - represents sql connection pool
    * @param logger - logger for logging
    */
@@ -48,4 +48,4 @@ class SqlGameEvent {
     }
 }
 
-module.exports = SqlGameEvent;
+module.exports = SqlGameEvents;

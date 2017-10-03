@@ -1,8 +1,8 @@
 const Events = require('./Events');
 const SqlEvents = require('../database/SqlEvents');
-const SqlEventLabel = require('../database/SqlEventLabel');
-const SqlGameEvent = require('../database/SqlGameEvent');
-const SqlGameUser = require('../database/SqlGameUser');
+const SqlEventLabels = require('../database/SqlEventLabels');
+const SqlGameEvents = require('../database/SqlGameEvents');
+const SqlGameUsers = require('../database/SqlGameUsers');
 const SqlUsers = require('../database/SqlUsers');
 const WantedEmail = require('./mail/WantedEmail');
 const config = require('../../../config');
@@ -19,12 +19,12 @@ class DbEvents extends Events{
         this._pgPool = pgPool;
         this._logger = logger;
 
-        this._sqlEventLabel = new SqlEventLabel(pgPool, logger);
-        this._sqlGameEvent = new SqlGameEvent(pgPool, logger);
-        this._sqlGameUser = new SqlGameUser(pgPool, logger);
+        this._sqlEventLabels = new SqlEventLabels(pgPool, logger);
+        this._sqlGameEvents = new SqlGameEvents(pgPool, logger);
+        this._sqlGameUsers = new SqlGameUsers(pgPool, logger);
         this._sqlUsers = new SqlUsers(pgPool, logger);
 
-        this._sqlEvents = new SqlEvents(pgPool, logger, this._sqlEventLabel, this._sqlGameEvent);
+        this._sqlEvents = new SqlEvents(pgPool, logger, this._sqlEventLabels, this._sqlGameEvents);
     }
 
     /**
@@ -42,14 +42,14 @@ class DbEvents extends Events{
                 return;
             }
             //find the game corresponding to the saved event
-            return this._sqlGameEvent.findGame(savedEvent);
+            return this._sqlGameEvents.findGame(savedEvent);
         })
         .then(gameId => {
             if (!gameId){
                 return;
             }
             //find the users that want to play the game
-            return this._sqlGameUser.getWantToPlay(gameId);
+            return this._sqlGameUsers.getWantToPlay(gameId);
         })
         .then(wantToPlay => {
             if (!wantToPlay){

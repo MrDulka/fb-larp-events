@@ -2,7 +2,7 @@
  * This class corresponds to the event_has_labels table in the database
  */
 
-class SqlEventLabel {
+class SqlEventLabels {
     constructor(pgPool, logger){
         this._pgPool = pgPool;
         this._logger = logger;
@@ -33,4 +33,4 @@ class SqlEventLabel {
     }
 }
 
-module.exports = SqlEventLabel;
+module.exports = SqlEventLabels;
