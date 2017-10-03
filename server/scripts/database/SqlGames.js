@@ -43,7 +43,7 @@ class SqlGames {
     /**
      * converts games to instances of the Game class
      * @param {Object[]} games - array of games as received from the database
-     * @return {Game[]} - array of instances of the Game class
+     * @return {Promise|Game[]} - promise that resolves with array of instances of the Game class
      */
     convert(games){
         return games.rows.map(game => {
@@ -51,6 +51,18 @@ class SqlGames {
             game.days, game.players, game.men_role, game.women_role, game.both_role,
             game.amount_of_comments, game.amount_of_played, game.amount_of_ratings,
             game.average_rating, game.id);
+        });
+    }
+
+    /**
+     * Find a game with the specified id in the database
+     * @param {Number} gameId - id of the game to be found
+     * @return {Promise|Game} - promise that resolves with a Game
+     */
+    byId(gameId){
+        return this._pgPool.query(`SELECT * FROM public.csld_game WHERE id=${gameId} AND deleted <> true`)
+        .then(result => {
+            return this.convert(result)[0];
         });
     }
 

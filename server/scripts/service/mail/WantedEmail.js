@@ -27,10 +27,10 @@ class WantedEmail {
         this._transporter = nodemailer.createTransport({
             host: mail.host,
             port: mail.port,
-            secure: true, // secure:true for port 465, secure:false for port 587
+            secure: mail.port === 465 ? true : false, // secure:true for port 465, secure:false for port 587
             auth: {
                 user: mail.user,
-                pass: mail.pass
+                pass: mail.password
             }
         });
     }
@@ -57,7 +57,7 @@ class WantedEmail {
                     <p>Ahoj,</p>
                     <p>
                        ${content}
-                    </p> 
+                    </p>
                     <p>Tým larpové databáze</p>
                 `
         };

@@ -49,7 +49,6 @@ class SqlEvents extends Events {
                 if (result.rows.length > 0) {
                     resolve(null);
                 } else {
-                    resolve(event);
                     return this._pgPool.query(insertSql, values);
                 }
             })
@@ -58,6 +57,7 @@ class SqlEvents extends Events {
                     return;
                 }
                 else {
+                    resolve(result.rows[0].id);
                     this._sqlGameEvents.matchGameEvent(event, result.rows[0].id);
                     this._sqlEventLabels.labelEvent(event, result.rows[0].id);
                 }

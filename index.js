@@ -1,7 +1,7 @@
 const DataStores = require('./server/scripts/database/DataStores.js');
 const WebApplication = require('./server/scripts/webapp/WebApplication');
 
-let config = require('./config');
+let config = require('home/balda/config');
 const sqlURL = config.sqlUrl;
 const hrajLarpUrl = config.hrajLarpUrl;
 

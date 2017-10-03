@@ -3,9 +3,9 @@ module.exports = {
     hrajLarpUrl: 'postgresql://hrajlarp:hrajlarp@10.0.75.2:5432/hrajlarp',
 
     email: {
-        host: 'smtp.gmail.com',
-        user: 'larpovadatabaze@gmail.com',
-        port: 587,
-        password: 'Heslo'
+        host: 'smtp.mailtrap.io',
+        user: '9107c0665b922c',
+        port: 2525,
+        password: 'b0321e8915f306'
     }
 };

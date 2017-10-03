@@ -4,6 +4,7 @@ const SqlEventLabels = require('../database/SqlEventLabels');
 const SqlGameEvents = require('../database/SqlGameEvents');
 const SqlGameUsers = require('../database/SqlGameUsers');
 const SqlUsers = require('../database/SqlUsers');
+const SqlGames = require('../database/SqlGames');
 const WantedEmail = require('./mail/WantedEmail');
 const config = require('../../../config');
 
@@ -23,33 +24,47 @@ class DbEvents extends Events{
         this._sqlGameEvents = new SqlGameEvents(pgPool, logger);
         this._sqlGameUsers = new SqlGameUsers(pgPool, logger);
         this._sqlUsers = new SqlUsers(pgPool, logger);
+        this._sqlGames = new SqlGames(pgPool, logger);
 
         this._sqlEvents = new SqlEvents(pgPool, logger, this._sqlEventLabels, this._sqlGameEvents);
+
+        this._wantedEmail = new WantedEmail(config.email);
     }
 
     /**
      * Save an event
-     * if the event is really saved and not already in the database, fing a matching
-     * game to the event, if there are people that want to play to game and send an email
+     * if the event is really saved and not already in the database, fing if there is a matching
+     * game to the event, if there are people that want to play the game and send an email
      * notification to those players
      * @param {Event} event to be savedEvent
      * @return {}
      */
     save(event){
+        let gameName, eventId;
+
         return this._sqlEvents.save(event)
-        .then(savedEvent => {
-            if (!savedEvent){
+        .then(savedEventId => {
+            if (!savedEventId){
                 return;
             }
+            eventId = savedEventId;
             //find the game corresponding to the saved event
-            return this._sqlGameEvents.findGame(savedEvent);
+            return this._sqlGameEvents.findGame(event);
         })
         .then(gameId => {
             if (!gameId){
                 return;
             }
+            //get the game by its id
+            return this._sqlGames.byId(gameId);
+        })
+        .then(game => {
+            if (!game){
+                return;
+            }
+            gameName = game.name;
             //find the users that want to play the game
-            return this._sqlGameUsers.getWantToPlay(gameId);
+            return this._sqlGameUsers.getWantToPlay(game.id);
         })
         .then(wantToPlay => {
             if (!wantToPlay){
@@ -59,8 +74,23 @@ class DbEvents extends Events{
             return this._sqlUsers.byIds(wantToPlay);
         })
         .then(users => {
-            //Send emails
-            console.log(users);
+            if (!users){
+                return;
+            }
+            //send emails
+            let result = Promise.resolve();
+            for (let user of users) {
+                result = result.then(() =>{
+                    return this._wantedEmail.send(user.email, gameName, event.name, eventId)
+                })
+                .then(info => {
+                    this._logger.info(user, info);
+                });
+            }
+            return result;
+        })
+        .catch(err => {
+            this._logger.error(`DbEvents#save Error:`, err);
         });
     }
 
