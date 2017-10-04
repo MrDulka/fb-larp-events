@@ -1,12 +1,15 @@
 const express = require('express');
 const fs = require('fs');
 const app = express();
+const schedule = require('node-schedule');
 
 const DbEvents = require('../service/DbEvents.js');
 const UserFbEvents = require('../service/UserFbEvents.js');
 const HrajLarpEvents = require('../service/HrajLarpEvents');
 const HrajuLarpyEvents = require('../service/HrajuLarpyEvents');
 const ScheduledEvents = require('../service/ScheduledEvents.js');
+
+const DbSimilarGames = require('../service/DbSimilarGames');
 
 const EventsController = require('../controller/EventsController.js');
 
@@ -31,6 +34,8 @@ class WebApplication {
         const dbEvents = new DbEvents(this._pgPool, this._logger);
         this.schedule(dbEvents);
 
+        this.scheduleSimilarGames();
+
         new EventsController(app, dbEvents);
 
         app.listen(process.env.PORT || 5000);
@@ -51,6 +56,10 @@ class WebApplication {
         scheduledEvents.schedule();
     }
 
+    scheduleSimilarGames(){
+        const dbSimilarGames = new DbSimilarGames(this._pgPool, this._logger);
+        let job = schedule.scheduleJob({hour: 3, minute: 0}, dbSimilarGames.load.bind(dbSimilarGames));
+    }
     /**
      * run the client side of the app
      */
