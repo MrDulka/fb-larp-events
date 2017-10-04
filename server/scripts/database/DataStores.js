@@ -1,19 +1,20 @@
 const {Pool} = require('pg');
 
 /**
- * class representing the databases we use
+ * Class representing the databases we use
  */
 
 class DataStores {
     /**
-     * initiate datastores with the provided links to databases
+     * Initiates datastores with the provided links to databases
+     * @param {String[]} urls - array of strings with urls
      */
     constructor(urls) {
         this._urls = urls
     }
 
     /**
-     * setup the databases, create connections to them
+     * Sets the databases up, creates connections to them
      * @return {Promise} promise that resolves with an array of databases
      */
     setup() {

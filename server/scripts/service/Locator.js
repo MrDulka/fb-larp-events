@@ -13,7 +13,7 @@ class Locator {
     }
 
     /**
-     * Find the region where the point specified by latitude and longitude falls
+     * Finds the region where the point specified by latitude and longitude falls
      * @param {number} latitude
      * @param {number} longitude
      * @return {string} region - name of the region. Return null if not found.

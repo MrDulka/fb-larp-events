@@ -1,9 +1,13 @@
 const _ = require('underscore');
 
+/**
+ * Class represents similar games
+ * computes similarity
+ */
 class SimilarGames {
 
     /**
-     * create SimilarGames
+     * Creates SimilarGames
      * @param {Games[]} games - array of games
      * @param {Logger} logger
      */
@@ -14,8 +18,8 @@ class SimilarGames {
 
     /**
      * Evaluates how similar two games are
-     * @param {Game} game1
-     * @param {Game} game2 - games to compare
+     * @param {Game} game1 - first game to compare
+     * @param {Game} game2 - second game to compare
      * @return {Number} rating describing the similarity of the games
      */
     compare(game1, game2) {

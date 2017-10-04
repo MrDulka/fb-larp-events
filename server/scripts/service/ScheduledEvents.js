@@ -1,7 +1,7 @@
 const _ = require('underscore');
 
 /**
- * class for scheduling of regular loads into the database
+ * Class for scheduling of regular loads into the database
  */
 class ScheduledEvents {
     /**
@@ -12,6 +12,7 @@ class ScheduledEvents {
     }
 
     /**
+     * Creates ScheduledEvents
      * @param {Object[]} inputEvents instance of class for getting the events
      * @param {Object} serializeEvents instance of class for saving the events
      * in database
@@ -26,8 +27,8 @@ class ScheduledEvents {
     }
 
     /**
-     * load events using the inputEvents class
-     * and then store them using the serializeEvents class
+     * Loads events using the inputEvents class
+     * and then stores them using the serializeEvents class
      */
     load() {
         this._logger.info("ScheduledEvents#load Started loading events");
@@ -49,7 +50,7 @@ class ScheduledEvents {
     }
 
     /**
-     * schedule regular calls of the load method
+     * Schedules regular calls of the load method
      */
     schedule() {
         this.stop();
@@ -58,7 +59,7 @@ class ScheduledEvents {
     }
 
     /**
-     * stop the timer
+     * Stops the timer
      */
     stop() {
         clearInterval(this._timer);

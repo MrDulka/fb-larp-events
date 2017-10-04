@@ -6,6 +6,11 @@ let Events = require('./Events');
  * @augments Events
  */
 class HrajLarpEvents extends Events {
+    /**
+     * Creates HrajLarpEvents
+     * @param {Object} pgPool - represents sql connection pool
+     * @param logger - logger for logging
+     */
     constructor(pgPool, logger) {
         super();
 

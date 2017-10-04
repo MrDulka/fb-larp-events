@@ -4,6 +4,7 @@
 
 class User {
     /**
+     * Creates a user
      * @param {String} name - user's name
      * @param {String} nickname - user's nickname
      * @param {String} email - user's email

@@ -3,7 +3,7 @@ const franc = require('franc');
 const _ = require('underscore');
 
 /**
- * class for formatting events
+ * Class for formatting events
  */
 class FormatEvents {
     /**

@@ -3,24 +3,23 @@
  */
 
 class Game {
-    /** Create a game
-     * @param {String} name
-     * @param {String} description
-     * @param {Number} year
-     * @param {String} web
+    /** Creates a game
+     * @param {String} name - name of the game
+     * @param {String} description - description of the game
+     * @param {Number} year - year when the game was first played
+     * @param {String} web - website of the game
      * @param {Number} hours - length of the game in hours
      * @param {Number} days - length of the game in days
      * @param {Number} players - total amount of players
      * @param {Number} menRole - amount of roles for men only
      * @param {Number} womenRole - amount of roles for women only
      * @param {Number} bothRole - amount of roles playable by either men or womenRole
-     * @param {Number} amountOfComments
-     * @param {Number} amountOfPlayed
-     * @param {Number} amountOfRatings
-     * @param {Number} averageRating
+     * @param {Number} amountOfComments - amount of comments the game has
+     * @param {Number} amountOfPlayed - amount of people, that played the game
+     * @param {Number} amountOfRatings - amount of ratings the game has
+     * @param {Number} averageRating - average rating of the game, between 0 and 100
      * @param {Number} id - game id in the database
-     * @param {Number[]} community - array of UserIds of players that played or wish Optional
-     * to play this game in the future
+     * @param {Number[]} community - array of UserIds of players that played or wish to play this game in the future Optional
      * @param {Number[]} labels - array of labelIds of labels assosiated with this game Optional
      * @param {Number[]} authors - array of UserIds of authors of the game Optional
      * @param {Object[]} similar - array of similar games Optional

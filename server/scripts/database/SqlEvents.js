@@ -7,7 +7,7 @@ const Events = require('../service/Events');
 class SqlEvents extends Events {
 
     /**
-     * Create SqlEvents
+     * Creates SqlEvents
      * @param {Object} pgPool - represents sql connection pool
      * @param logger - logger for logging
      */
@@ -22,8 +22,10 @@ class SqlEvents extends Events {
     }
 
     /**
-     * Save the event into the database, if it is not already there
+     * Saves the event into the database, if it is not already there
      * @param {Event} event - Event to be stored in the database
+     * @return {Promise|Number} - promise that resolves with id of the event that was just saved,
+     * if it was really inserted into the database
      */
     save(event) {
         if (!event) {
@@ -66,9 +68,8 @@ class SqlEvents extends Events {
 
     }
 
-
     /**
-     * Load all events from the database
+     * Loads all events from the database
      * @return {Promise|Event[]} - resolves with array of events in the database
      */
     load() {

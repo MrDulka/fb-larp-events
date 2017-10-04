@@ -9,11 +9,16 @@ const WantedEmail = require('./mail/WantedEmail');
 const config = require('../../../config');
 
 /**
- * Class stores events in the database
+ * Class represents events in the datastore
  * @augments Events
  */
 
 class DbEvents extends Events{
+    /**
+    * Creates DbEvents
+    * @param {Object} pgPool - represents sql connection pool
+    * @param logger - logger for logging
+    */
     constructor(pgPool, logger){
         super();
 
@@ -32,9 +37,9 @@ class DbEvents extends Events{
     }
 
     /**
-     * Save an event
-     * if the event is really saved and not already in the database, fing if there is a matching
-     * game to the event, if there are people that want to play the game and send an email
+     * Saves an event
+     * if the event is really saved and not already in the database, finds if there is a matching
+     * game to the event, if there are people that want to play the game and sends an email
      * notification to those players
      * @param {Event} event to be savedEvent
      * @return {}

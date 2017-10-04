@@ -1,16 +1,21 @@
 
 /**
- *  class representing keywords for FB search
+ *  Class representing keywords for FB search
  */
 
 class DbFbKeywords {
+    /**
+     * Creates DbFbKeywords
+     * @param {Object} pgPool - represents sql connection pool
+     * @param logger - logger for logging
+     */
     constructor(pgPool, logger) {
         this._pgPool = pgPool;
         this._logger = logger;
     }
 
     /**
-     *  load the keywords from the database
+     *  Loads the keywords for searching on FB from the database
      *  @return {Promise|Object[]} promise that resolves with an array of objects
      *  containing the queries and associated types
      */

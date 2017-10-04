@@ -5,7 +5,7 @@
  class SqlGameLabels{
 
    /**
-    * Create SqlGameLabels
+    * Creates SqlGameLabels
     * @param {Object} pgPool - represents sql connection pool
     * @param logger - logger for logging
     */
@@ -15,7 +15,7 @@
    }
 
    /**
-    * finds labels assosiated with the game and adds them to game's labels
+    * Finds labels assosiated with the game and adds them to Game's labels property
     * @param {Game[]} games Array of games to search labels for
     * @return {Promise|Game[]} - promise resolves with array of games with added values in their
     *   labels property

@@ -5,7 +5,7 @@
 class SqlSimilarGames{
 
     /**
-    * Create SqlSimilarGames
+    * Creates SqlSimilarGames
     * @param {Object} pgPool - represents sql connection pool
     * @param logger - logger for logging
     */
@@ -15,8 +15,9 @@ class SqlSimilarGames{
     }
 
     /**
-     * clear the table and then save all the games anew
-     * @param {Game[]} games Array of games to be saved
+     * Clears the table and then saves all the similar games anew
+     * @param {Game[]} games - array of games to be saved
+     * @return {Promise|undefined} - promise that resolves with undefined
      */
     save(games){
         return this._pgPool.query(`TRUNCATE TABLE public.similar_games`)

@@ -2,7 +2,7 @@
  * Class representing an Event
  */
 class Event {
-    /** Create an event
+    /** Creates an event
      * @param {string} name - name of the Event
      * @param {string} description - description of the Event
      * @param {Object} date - contains start and end dates of the Event

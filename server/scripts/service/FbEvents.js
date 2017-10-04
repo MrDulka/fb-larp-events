@@ -8,6 +8,12 @@ const Events = require('./Events');
  * @augments Events
  */
 class FbEvents extends Events {
+    /**
+     * Creates FbEvents
+     * @param {Promise|Object[]} promisedQueries - promise that resolves with an
+     * array of objects containing queries that will be searched
+     * @param logger - logger for logging
+     */
     constructor(promisedQueries, logger) {
         super();
 
@@ -26,7 +32,7 @@ class FbEvents extends Events {
 
     /**
      * @inheritDoc
-     * loads events
+     * Loads events
      * @return {Promise} promise that resolves with an array of events that we
      * received from Facebook, formatted as instances of Event class
      */

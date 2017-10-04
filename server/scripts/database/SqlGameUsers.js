@@ -5,7 +5,7 @@
 class SqlGameUsers{
 
     /**
-    * Create SqlGameUsers
+    * Creates SqlGameUsers
     * @param {Object} pgPool - represents sql connection pool
     * @param logger - logger for logging
     */
@@ -15,7 +15,7 @@ class SqlGameUsers{
     }
 
     /**
-    * finds players that played or would like to play the game and adds them to game's "community"
+    * Finds players that played or would like to play the game and adds them to game's "community"
     * @param {Games[]} games - array of games
     * @return {Promise|Games[]} - promise resolves with array of games with added values in their
     * community property
@@ -37,7 +37,7 @@ class SqlGameUsers{
     }
 
     /**
-    * finds users that want to play the game specified by gameId
+    * Finds users that want to play the game specified by gameId
     * @param {Number} gameId - id of the game that we want to testindex
     * @return {Promise|Number[]} promise that resolves with array of userIds of users
     * who want to play the game
@@ -47,7 +47,7 @@ class SqlGameUsers{
         .then(result => {
             return result.rows
                 .filter(row => row.state === 1 && row.game_id === gameId)
-                .map(row => row.user_id);        
+                .map(row => row.user_id);
         });
     }
 }

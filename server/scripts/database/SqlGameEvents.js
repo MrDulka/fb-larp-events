@@ -5,7 +5,7 @@
 class SqlGameEvents {
 
   /**
-   * Create SqlGameEvents
+   * Creates SqlGameEvents
    * @param {Object} pgPool - represents sql connection pool
    * @param logger - logger for logging
    */
@@ -17,7 +17,8 @@ class SqlGameEvents {
     /**
      * Matches events with games in the database
      * @param {Event} event - event to be matched
-     * @param {number} eventId - id of the event that was just inserted into the database
+     * @param {Number} eventId - id of the event that was just inserted into the database
+     * @return {Promise|Object} - promise that resolves with an object, result of the insertSql query
      */
     matchGameEvent(event, eventId){
         return this.findGame(event)
@@ -31,7 +32,7 @@ class SqlGameEvents {
     }
 
     /**
-     * Find a game matching with the provided event
+     * Finds a game matching with the provided event
      * @param {Event} event - event that we want matched
      * @return {Proise|Number} promise that resolves with id of the game that matches with passed in event
      */

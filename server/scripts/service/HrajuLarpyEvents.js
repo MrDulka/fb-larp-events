@@ -9,6 +9,10 @@ let sanitizeHtml = require('sanitize-html');
  */
 
 class HrajuLarpyEvents extends Events{
+    /**
+     * Creates HrajLarpEvents
+     * @param logger - logger for logging
+     */
     constructor(logger){
         super();
 

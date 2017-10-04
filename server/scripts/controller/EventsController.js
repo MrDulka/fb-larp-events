@@ -3,8 +3,8 @@
  */
 class EventsController {
     /**
-     * Create a controller
-     * Route HTTP GET requests to "/event" with the load method
+     * Creates a controller
+     * Routes HTTP GET requests to "/event" with the load method
      * @param {Application} app - Express Application
      * @param {Events} events - instance of Events class, used for working with database
      */

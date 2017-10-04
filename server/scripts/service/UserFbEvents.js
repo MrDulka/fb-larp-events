@@ -1,14 +1,22 @@
 const DbFbKeywords = require('../database/DbFbKeywords');
 const FbEvents = require('./FbEvents');
 
+/**
+ * This class coordinates searching on facebook with keywords in the database
+ */
 class UserFbEvents {
+    /**
+     * Create UserFbEvents
+     * @param {Object} pgPool - represents sql connection pool
+     * @param logger - logger for logging
+     */
     constructor(pgPool, logger){
         this._logger = logger;
         this._pgPool = pgPool;
     }
 
     /**
-     * initiate FbEvents with keywords from the database
+     * Initiate FbEvents with keywords from the database
      * @return {FbEvents} instance of FbEvents
      */
     initiateFbEvents(){

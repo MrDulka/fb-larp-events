@@ -14,11 +14,14 @@ const DbSimilarGames = require('../service/DbSimilarGames');
 const EventsController = require('../controller/EventsController.js');
 
 /**
- * class representing the web application
+ * Class representing the web application
  */
 class WebApplication {
     /**
-     * create webapplication with properties linking to databases
+     * Creates webapplication
+     * @param pool - sql connection pool
+     * @param hrajLarpPool - sql connection pool
+     * @param logger - logger for logging
      */
     constructor(pool, hrajLarpPool, logger) {
         this._pgPool = pool;
@@ -28,7 +31,7 @@ class WebApplication {
     }
 
     /**
-     * Setup the application
+     * Sets up the application
      */
     setup() {
         const dbEvents = new DbEvents(this._pgPool, this._logger);
@@ -43,7 +46,7 @@ class WebApplication {
     }
 
     /**
-     * schedule updating of the specified database
+     * Schedules updating of the specified database
      * @param db - instance of class for interacting with events in the database
      */
     schedule(db) {
@@ -56,12 +59,15 @@ class WebApplication {
         scheduledEvents.schedule();
     }
 
+    /**
+     * Schedules regular calculation of similar games and associated updating of the database
+     */
     scheduleSimilarGames(){
         const dbSimilarGames = new DbSimilarGames(this._pgPool, this._logger);
         let job = schedule.scheduleJob({hour: 3, minute: 0}, dbSimilarGames.load.bind(dbSimilarGames));
     }
     /**
-     * run the client side of the app
+     * Runs the client side of the app
      */
     clientside() {
     }

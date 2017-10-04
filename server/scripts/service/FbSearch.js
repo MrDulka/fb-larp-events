@@ -13,7 +13,7 @@ class FbSearch {
     }
 
     /**
-     * Search for events for all the passed in queries
+     * Searches for events for all the passed in queries
      * @param {Object[]} searchArray - array of search queries + types that should be searched
      * @return {Promise|Object[]} promise that resolves with array of events returned from Facebook
      */
@@ -105,7 +105,7 @@ class FbSearch {
     }
 
     /**
-     * Make a request to the url provided and then iterate over the paginated
+     * Makes a request to the url provided and then iterates over the paginated
      * results, making more requests to the provided "next" urls
      * @param {string} firstUrl - url with which we start the search
      * @return {Promise|Array} results put together in one array
@@ -140,7 +140,7 @@ class FbSearch {
     }
 
     /**
-     * Make a call to specified url to get data
+     * Makes a call to specified url to get data
      * @param {string} url
      * @return {Promise} promise that resolves to an object with returned data
      */

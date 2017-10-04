@@ -5,7 +5,7 @@
  class SqlGameAuthors{
 
    /**
-    * Create SqlGameAuthors
+    * Creates SqlGameAuthors
     * @param {Object} pgPool - represents sql connection pool
     * @param logger - logger for logging
     */
@@ -15,7 +15,7 @@
    }
 
    /**
-    * finds authors assosiated with the game and adds them to game's authors
+    * Finds authors assosiated with the game and adds them to game's authors property 
     * @param {Game[]} games Array of games to search authors for
     * @return {Promise|Game[]} - promise resolves with array of games with added values in their
     *   authors property

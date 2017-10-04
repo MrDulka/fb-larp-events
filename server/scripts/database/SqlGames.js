@@ -6,9 +6,9 @@ const Game = require('./Game');
 
 class SqlGames {
     /**
-     * Create SqlGames
+     * Creates SqlGames
      * @param {Object} pgPool - represents sql connection pool
-     * @param logger
+     * @param logger - logger for logging
      */
     constructor(pgPool, logger, sqlGameUsers, sqlGameLabels, sqlGameAuthors){
         this._pgPool = pgPool;
@@ -19,7 +19,7 @@ class SqlGames {
     }
 
     /**
-     * load games from the database
+     * Loads games from the database
      * @return {Promise|Game[]} promise that resolves with an array of Games
      */
     load(){
@@ -41,7 +41,7 @@ class SqlGames {
     }
 
     /**
-     * converts games to instances of the Game class
+     * Converts games to instances of the Game class
      * @param {Object[]} games - array of games as received from the database
      * @return {Promise|Game[]} - promise that resolves with array of instances of the Game class
      */
@@ -55,7 +55,7 @@ class SqlGames {
     }
 
     /**
-     * Find a game with the specified id in the database
+     * Finds a game with the specified id in the database
      * @param {Number} gameId - id of the game to be found
      * @return {Promise|Game} - promise that resolves with a Game
      */
