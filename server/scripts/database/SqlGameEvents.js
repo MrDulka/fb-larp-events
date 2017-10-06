@@ -47,6 +47,30 @@ class SqlGameEvents {
             return;
         });
     }
+
+    /* Alternative findGame - using string similarity, searches for similarity instead of exact match
+
+    const stringSimilarity = require('string-similarity');
+    findGame(event){
+            let findGameSql = `SELECT * FROM public.csld_game`;
+
+            return this._pgPool.query(findGameSql)
+            .then(result => {
+                let names = result.rows.map(game => game.name);
+                let similarGames = stringSimilarity.findBestMatch(event.name, names);
+
+                if (similarGames.bestMatch.rating > 0.8){
+                    let bestMatchGame = result.rows.find(game => {
+                        return game.name === similarGames.bestMatch.target;
+                    });
+                    console.log(similarGames.bestMatch);
+                    return bestMatchGame.id;
+                }
+
+                return;
+            });
+    }
+    */
 }
 
 module.exports = SqlGameEvents;

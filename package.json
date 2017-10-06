@@ -29,6 +29,7 @@
     "nodemailer": "4.0.1",
     "pg": "6.0.3",
     "sanitize-html": "1.14.1",
+    "string-similarity": "^1.2.0",
     "underscore": "1.8.3"
   }
 }
