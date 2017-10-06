@@ -11,14 +11,11 @@ class SqlEvents extends Events {
      * @param {Object} pgPool - represents sql connection pool
      * @param logger - logger for logging
      */
-    constructor(pgPool, logger, sqlEventLabels, sqlGameEvents) {
+    constructor(pgPool, logger) {
         super();
 
         this._pgPool = pgPool;
         this._logger = logger;
-
-        this._sqlEventLabels = sqlEventLabels;
-        this._sqlGameEvents = sqlGameEvents;
     }
 
     /**
@@ -60,8 +57,6 @@ class SqlEvents extends Events {
                 }
                 else {
                     resolve(result.rows[0].id);
-                    this._sqlGameEvents.matchGameEvent(event, result.rows[0].id);
-                    this._sqlEventLabels.labelEvent(event, result.rows[0].id);
                 }
             });
         });

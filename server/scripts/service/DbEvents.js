@@ -30,8 +30,7 @@ class DbEvents extends Events{
         this._sqlGameUsers = new SqlGameUsers(pgPool, logger);
         this._sqlUsers = new SqlUsers(pgPool, logger);
         this._sqlGames = new SqlGames(pgPool, logger);
-
-        this._sqlEvents = new SqlEvents(pgPool, logger, this._sqlEventLabels, this._sqlGameEvents);
+        this._sqlEvents = new SqlEvents(pgPool, logger);
 
         this._wantedEmail = new WantedEmail(config.email);
     }
@@ -53,7 +52,8 @@ class DbEvents extends Events{
                 return;
             }
             eventId = savedEventId;
-            //find the game corresponding to the saved event
+            this._sqlGameEvents.matchGameEvent(event, eventId);
+            this._sqlEventLabels.labelEvent(event, eventId);
             return this._sqlGameEvents.findGame(event);
         })
         .then(gameId => {

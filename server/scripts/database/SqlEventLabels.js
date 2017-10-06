@@ -23,10 +23,9 @@ class SqlEventLabels {
     labelEvent(event, eventId){
         const komorniLabelId = 1;
         let findLabelIdSql = `SELECT * FROM public.csld_label WHERE name = '${event.source}'`;
-
         return this._pgPool.query(findLabelIdSql)
         .then(result => {
-            if(result.rows[0].length === 1) {
+            if(result.rows.length === 1) {
                 let labelId = result.rows[0].id;
                 let insertSql = `INSERT INTO public.event_has_labels (event_id, label_id) VALUES (${eventId}, ${labelId});`;
 
