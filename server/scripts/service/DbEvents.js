@@ -44,7 +44,7 @@ class DbEvents extends Events{
      * @return {}
      */
     save(event){
-        let gameName, eventId;
+        let gameNames, eventId;
 
         return this._sqlEvents.save(event)
         .then(savedEventId => {
@@ -54,43 +54,50 @@ class DbEvents extends Events{
             eventId = savedEventId;
             this._sqlGameEvents.matchGameEvent(event, eventId);
             this._sqlEventLabels.labelEvent(event, eventId);
-            return this._sqlGameEvents.findGame(event);
+
+            return this._sqlGameEvents.findGames(event);
         })
-        .then(gameId => {
-            if (!gameId){
+        .then(gameIds => {
+            if (!gameIds){
                 return;
             }
-            //get the game by its id
-            return this._sqlGames.byId(gameId);
+            return this._sqlGames.byIds(gameIds);
         })
-        .then(game => {
-            if (!game){
+        .then(games => {
+            if (!games){
                 return;
             }
-            gameName = game.name;
-            //find the users that want to play the game
-            return this._sqlGameUsers.getWantToPlay(game.id);
+            gameNames = games.map(game => game.name);
+            //find the users that want to play the game, get an array of users for each game
+            return Promise.all(games.map(game => {
+                return this._sqlGameUsers.getWantToPlay(game.id);
+            }));
         })
         .then(wantToPlay => {
             if (!wantToPlay){
                 return;
             }
             //find users by their ids
-            return this._sqlUsers.byIds(wantToPlay);
+            return Promise.all(wantToPlay.map(userIds => {
+                return this._sqlUsers.byIds(userIds);
+            }));
         })
         .then(users => {
             if (!users){
                 return;
             }
+
             //send emails
             let result = Promise.resolve();
-            for (let user of users) {
-                result = result.then(() =>{
-                    return this._wantedEmail.send(user.email, gameName, event.name, eventId)
-                })
-                .then(info => {
-                    this._logger.info(user, info);
-                });
+            for (let i = 0; i<users.length; i++){
+                for (let user of users[i]) {
+                    result = result.then(() =>{
+                        return this._wantedEmail.send(user.email, gameNames[i], event.name, eventId)
+                    })
+                    .then(info => {
+                        this._logger.info(user, info);
+                    });
+                }
             }
             return result;
         })

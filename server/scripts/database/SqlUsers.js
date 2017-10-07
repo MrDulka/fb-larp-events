@@ -23,12 +23,13 @@ class SqlUsers{
     byIds(ids){
         return this._pgPool.query(`SELECT * FROM public.csld_csld_user`)
         .then(result => {
-            let users = [];
-            result.rows.forEach(row=>{
-                if (ids.indexOf(row.id) > -1){
-                    users.push(row);
+            let users = result.rows.reduce((accumulator, user) => {
+                if (ids.indexOf(user.id) > -1){
+                    return accumulator.concat(user);
                 }
-            });
+                return accumulator;
+            }, []);
+            
             return this.convert(users);
         });
     }

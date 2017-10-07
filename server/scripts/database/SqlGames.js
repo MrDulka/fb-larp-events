@@ -27,7 +27,7 @@ class SqlGames {
 
         return this._pgPool.query(`SELECT * FROM public.csld_game WHERE deleted <> true`)
         .then(result => {
-            return this.convert(result);
+            return this.convert(result.rows);
         })
         .then(games => {
             return this._sqlGameUsers.getCommunity(games);
@@ -46,7 +46,7 @@ class SqlGames {
      * @return {Promise|Game[]} - promise that resolves with array of instances of the Game class
      */
     convert(games){
-        return games.rows.map(game => {
+        return games.map(game => {
             return new Game(game.name, game.description, game.year, game.web, game.hours,
             game.days, game.players, game.men_role, game.women_role, game.both_role,
             game.amount_of_comments, game.amount_of_played, game.amount_of_ratings,
@@ -55,14 +55,20 @@ class SqlGames {
     }
 
     /**
-     * Finds a game with the specified id in the database
-     * @param {Number} gameId - id of the game to be found
-     * @return {Promise|Game} - promise that resolves with a Game
+     * Finds games with the specified ids in the database
+     * @param {Number[]} gameIds - ids of the game to be found
+     * @return {Promise|Game[]} - promise that resolves with an array of Games
      */
-    byId(gameId){
-        return this._pgPool.query(`SELECT * FROM public.csld_game WHERE id=${gameId} AND deleted <> true`)
+    byIds(gameIds){
+        return this._pgPool.query(`SELECT * FROM public.csld_game WHERE deleted <> true`)
         .then(result => {
-            return this.convert(result)[0];
+            let games = result.rows.reduce((accumulator, game) => {
+                if (gameIds.indexOf(game.id) > -1){
+                    return accumulator.concat(game);
+                }
+                return accumulator;
+            }, []);
+            return this.convert(games);
         });
     }
 
