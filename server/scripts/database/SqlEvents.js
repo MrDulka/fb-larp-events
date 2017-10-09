@@ -42,23 +42,18 @@ class SqlEvents extends Events {
         let values = [event.name, event.description, event.location.name, event.source, event.date.start_date, event.date.end_date,
             event.location.latitude, event.location.longitude, web, 1, event.amountOfPlayers, event.language];
 
-        return new Promise((resolve, reject) => {
-            this._pgPool.query(selectSql)
-            .then(result => {
-                if (result.rows.length > 0) {
-                    resolve(null);
-                } else {
-                    return this._pgPool.query(insertSql, values);
-                }
-            })
-            .then(result => {
-                if (!result) {
-                    return;
-                }
-                else {
-                    resolve(result.rows[0].id);
-                }
-            });
+        return this._pgPool.query(selectSql)
+        .then(result => {
+            if (result.rows.length > 0) {
+                return;
+            }
+            return this._pgPool.query(insertSql, values);
+        })
+        .then(result => {
+            if (!result) {
+                return;
+            }
+            return result.rows[0].id;
         });
 
     }
