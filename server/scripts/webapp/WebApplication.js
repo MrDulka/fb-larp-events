@@ -64,6 +64,7 @@ class WebApplication {
      */
     scheduleSimilarGames(){
         const dbSimilarGames = new DbSimilarGames(this._pgPool, this._logger);
+        dbSimilarGames.load();
         let job = schedule.scheduleJob({hour: 3, minute: 0}, dbSimilarGames.load.bind(dbSimilarGames));
     }
     /**
