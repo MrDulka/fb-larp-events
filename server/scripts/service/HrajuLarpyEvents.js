@@ -32,7 +32,7 @@ class HrajuLarpyEvents extends Events{
     load() {
         this._logger.info(`HrajuLarpyEvents#load`);
 
-        const url = 'http://hrajularpy.cz/api-events.php';
+        const url = 'https://hrajularpy.cz/api-events.php';
 
         return fetch(url)
         .then(response => response.json())
@@ -56,12 +56,12 @@ class HrajuLarpyEvents extends Events{
             let date = {
               start_date: new Date(event.start),
               end_date: new Date(event.end)
-            }
+            };
             let location = {
               latitude: event.latitude || null,
               longitude: event.longitude || null,
               name: event.location
-            }
+            };
             return new Event(event.name, description, date, location, event.website, source, event.capacity, 'cz');
         });
     }
