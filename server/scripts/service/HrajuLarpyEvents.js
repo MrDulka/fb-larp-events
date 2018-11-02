@@ -40,7 +40,7 @@ class HrajuLarpyEvents extends Events{
           return this.convert(data.results);
         })
         .catch(err => {
-          this._logger.error('HrajuLarpyEvents#load Error: ', error)
+          this._logger.error('HrajuLarpyEvents#load Error: ', err)
         });
     }
 
